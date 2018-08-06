@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DashboardViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+class DashboardViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     @IBOutlet weak var irrigationCollectionView: UICollectionView!
     
@@ -32,5 +32,15 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         cell.switchLabel.text = "OFF"
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        var width = collectionView.frame.width
+        width = (width - (7*8))/6
+        return CGSize(width: width, height: collectionView.frame.height)
+        
     }
 }
