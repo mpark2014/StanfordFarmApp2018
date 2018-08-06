@@ -10,6 +10,7 @@
 		4623F2592118D539005F1B15 /* MasterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4623F2582118D539005F1B15 /* MasterTableViewCell.swift */; };
 		4623F25B2118DA7E005F1B15 /* DashboardIrrigationCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4623F25A2118DA7E005F1B15 /* DashboardIrrigationCollectionViewCell.swift */; };
 		4623F25F2118DC69005F1B15 /* DashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4623F25E2118DC69005F1B15 /* DashboardViewController.swift */; };
+		4623F2612119022B005F1B15 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4623F2602119022B005F1B15 /* Tools.swift */; };
 		464C58E1211290060079487A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464C58E0211290060079487A /* AppDelegate.swift */; };
 		464C58E3211290060079487A /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464C58E2211290060079487A /* MasterViewController.swift */; };
 		464C58E5211290060079487A /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464C58E4211290060079487A /* DetailViewController.swift */; };
@@ -48,6 +49,7 @@
 		4623F2582118D539005F1B15 /* MasterTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterTableViewCell.swift; sourceTree = "<group>"; };
 		4623F25A2118DA7E005F1B15 /* DashboardIrrigationCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardIrrigationCollectionViewCell.swift; sourceTree = "<group>"; };
 		4623F25E2118DC69005F1B15 /* DashboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewController.swift; sourceTree = "<group>"; };
+		4623F2602119022B005F1B15 /* Tools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Tools.swift; path = StanfordFarmApp2018/Tools.swift; sourceTree = SOURCE_ROOT; };
 		464C58DD211290060079487A /* StanfordFarmApp2018.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StanfordFarmApp2018.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		464C58E0211290060079487A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		464C58E2211290060079487A /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 				468FE77A2112A03C00D64B77 /* GoogleService-Info.plist */,
 				464C58E0211290060079487A /* AppDelegate.swift */,
 				464C58E6211290060079487A /* Main.storyboard */,
+				4623F2602119022B005F1B15 /* Tools.swift */,
 				4623F25D2118DADD005F1B15 /* View Controllers */,
 				4623F25C2118DAC5005F1B15 /* Cells */,
 				464C58E9211290080079487A /* Assets.xcassets */,
@@ -415,6 +418,7 @@
 			files = (
 				464C58E5211290060079487A /* DetailViewController.swift in Sources */,
 				4623F25F2118DC69005F1B15 /* DashboardViewController.swift in Sources */,
+				4623F2612119022B005F1B15 /* Tools.swift in Sources */,
 				4623F25B2118DA7E005F1B15 /* DashboardIrrigationCollectionViewCell.swift in Sources */,
 				464C58E3211290060079487A /* MasterViewController.swift in Sources */,
 				464C58E1211290060079487A /* AppDelegate.swift in Sources */,

@@ -16,6 +16,6 @@ class DashboardIrrigationCollectionViewCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        mainView.layer.cornerRadius = 8.0
+        mainView.layer.cornerRadius = 4
     }
 }

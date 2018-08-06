@@ -13,7 +13,7 @@ class MasterViewController: UITableViewController {
 
     var detailViewController: DetailViewController? = nil
     var objects = [Any]()
-    var masters = ["Dashboard", "Bed 1", "Bed 2", "Bed 3", "Bed 4", "Bed 5", "Bed 6"]
+    var masters = ["DASH", "BED 1", "BED 2", "BED 3", "BED 4", "BED 5", "BED 6"]
     
     var data:[String:[String:AnyObject]]! = [:]
     var G1:[Int]! = []
@@ -72,13 +72,20 @@ class MasterViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return masters.count
     }
-
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "masterCell", for: indexPath) as! MasterTableViewCell
 
         let title = masters[indexPath.row]
         cell.mainTitle!.text = title
         
+        if indexPath.row == 0 {
+            cell.mainImage.image = UIImage(named: "dashboard")
+        } else {
+            cell.mainImage.image = UIImage(named: "bed")
+        }
+        
+        cell.mainImage.setImageColor(color: UIColor.white)
         return cell
     }
     
@@ -89,7 +96,5 @@ class MasterViewController: UITableViewController {
         // Return false if you do not want the specified item to be editable.
         return true
     }
-
-
 }
 
