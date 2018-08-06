@@ -17,7 +17,7 @@ class DetailViewController: UIViewController {
         // Update the user interface for the detail item.
         if let detail = detailItem {
             if let label = detailDescriptionLabel {
-                label.text = detail.description
+                label.text = detail + "\r\n" + (String(describing: data))
             }
         }
     }
@@ -33,13 +33,18 @@ class DetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    var detailItem: NSDate? {
+    var detailItem: String? {
         didSet {
             // Update the view.
             configureView()
         }
     }
-
-
+    
+    var data: [String:[String:AnyObject]]? {
+        didSet {
+            // Update the view.
+            configureView()
+        }
+    }
 }
 
