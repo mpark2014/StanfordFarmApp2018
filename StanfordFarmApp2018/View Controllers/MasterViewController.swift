@@ -59,8 +59,6 @@ class MasterViewController: UITableViewController {
                 let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
                 controller.detailItem = title
                 controller.data = data
-//                controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
-//                controller.navigationItem.leftItemsSupplementBackButton = true
             }
         }
     }
@@ -76,10 +74,11 @@ class MasterViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "masterCell", for: indexPath) as! MasterTableViewCell
 
         let title = masters[indexPath.row]
-        cell.textLabel!.text = title
+        cell.mainTitle!.text = title
+        
         return cell
     }
     
