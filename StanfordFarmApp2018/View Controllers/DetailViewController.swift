@@ -11,34 +11,47 @@ import UIKit
 class DetailViewController: UIViewController {
 
     @IBOutlet weak var detailDescriptionLabel: UILabel!
-
-    func configureView() {
-        // Update the user interface for the detail item.
-        if let detail = detailItem {
-            if let label = detailDescriptionLabel {
-                label.text = detail + "\r\n" + (String(describing: data))
-            }
-        }
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        configureView()
-    }
+    @IBOutlet weak var dashContainer: UIView!
+    @IBOutlet weak var bedContainer: UIView!
     
     var detailItem: String? {
         didSet {
-            // Update the view.
+            configureView()
+        }
+    }
+    
+    var isBed: Bool? {
+        didSet {
             configureView()
         }
     }
     
     var data: [String:[String:AnyObject]]? {
         didSet {
-            // Update the view.
             configureView()
         }
+    }
+    
+    func configureView() {
+        if let detail = detailItem {
+            if let label = detailDescriptionLabel {
+                label.text = detail + "\r\n" + (String(describing: data))
+            }
+        }
+        
+        if let bed = isBed {
+            if let dContainer = dashContainer {
+                if let bContainer = bedContainer {
+                    dContainer.isHidden = bed ? true : false
+                    bContainer.isHidden = bed ? false : true
+                }
+            }
+        }
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        configureView()
     }
 }
 

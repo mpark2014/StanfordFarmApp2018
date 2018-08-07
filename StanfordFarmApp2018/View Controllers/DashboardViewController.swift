@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseDatabase
 
 class DashboardViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
@@ -18,6 +19,9 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     @IBOutlet weak var messagesView: UIView!
     @IBOutlet weak var calendarView: UIView!
     @IBOutlet weak var toDoView: UIView!
+    
+    var ref: DatabaseReference!
+    var data:[String:Bool]! = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,8 +36,27 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         messagesView.layer.cornerRadius = 4
         calendarView.layer.cornerRadius = 4
         toDoView.layer.cornerRadius = 4
+        
+        firebaseGet()
     }
-
+    
+    func firebaseGet() {
+        // Firebase GET request
+        self.ref = Database.database().reference()
+        
+        ref.child("iFlag").observe(DataEventType.childAdded, with: { (snapshot) in
+            let key = snapshot.key
+            let item = ((snapshot.value as! Int) == 0) ? false : true
+            self.data[key] = item
+            
+            print(item)
+            
+            DispatchQueue.main.async() {
+                self.irrigationCollectionView.reloadData()
+            }
+        })
+    }
+    
     // MARK: Collection View Methods
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -44,7 +67,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         let cell = irrigationCollectionView.dequeueReusableCell(withReuseIdentifier: "dashboardIrrigationCell", for: indexPath) as! DashboardIrrigationCollectionViewCell
         
         cell.mainTitle.text = "Bed " + String(indexPath.row+1)
-        cell.switchLabel.text = "OFF"
+        cell.irrigationSwitch = self.data["G\(indexPath.row+1)"]
         
         return cell
     }

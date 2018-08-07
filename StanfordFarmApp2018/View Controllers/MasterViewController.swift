@@ -31,8 +31,8 @@ class MasterViewController: UITableViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        clearsSelectionOnViewWillAppear = splitViewController!.isCollapsed
         super.viewWillAppear(animated)
+        self.tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: true, scrollPosition: UITableViewScrollPosition.top)
     }
     
     func firebaseGet() {
@@ -56,7 +56,10 @@ class MasterViewController: UITableViewController {
         if segue.identifier == "showDetail" {
             if let indexPath = tableView.indexPathForSelectedRow {
                 let title = masters[indexPath.row]
+                
                 let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
+                
+                controller.isBed = indexPath.row==0 ? false : true
                 controller.detailItem = title
                 controller.data = data
             }
