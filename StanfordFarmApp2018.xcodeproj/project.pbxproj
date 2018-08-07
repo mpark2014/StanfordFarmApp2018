@@ -11,6 +11,7 @@
 		4623F25B2118DA7E005F1B15 /* DashboardIrrigationCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4623F25A2118DA7E005F1B15 /* DashboardIrrigationCollectionViewCell.swift */; };
 		4623F25F2118DC69005F1B15 /* DashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4623F25E2118DC69005F1B15 /* DashboardViewController.swift */; };
 		4623F2612119022B005F1B15 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4623F2602119022B005F1B15 /* Tools.swift */; };
+		4633E1672119722B006DAF0D /* DashboardSensorTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4633E1662119722B006DAF0D /* DashboardSensorTableViewCell.swift */; };
 		464C58E1211290060079487A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464C58E0211290060079487A /* AppDelegate.swift */; };
 		464C58E3211290060079487A /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464C58E2211290060079487A /* MasterViewController.swift */; };
 		464C58E5211290060079487A /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464C58E4211290060079487A /* DetailViewController.swift */; };
@@ -55,6 +56,7 @@
 		4623F25A2118DA7E005F1B15 /* DashboardIrrigationCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardIrrigationCollectionViewCell.swift; sourceTree = "<group>"; };
 		4623F25E2118DC69005F1B15 /* DashboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewController.swift; sourceTree = "<group>"; };
 		4623F2602119022B005F1B15 /* Tools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Tools.swift; path = StanfordFarmApp2018/Tools.swift; sourceTree = SOURCE_ROOT; };
+		4633E1662119722B006DAF0D /* DashboardSensorTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSensorTableViewCell.swift; sourceTree = "<group>"; };
 		464C58DD211290060079487A /* StanfordFarmApp2018.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StanfordFarmApp2018.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		464C58E0211290060079487A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		464C58E2211290060079487A /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 			children = (
 				4623F25A2118DA7E005F1B15 /* DashboardIrrigationCollectionViewCell.swift */,
 				4623F2582118D539005F1B15 /* MasterTableViewCell.swift */,
+				4633E1662119722B006DAF0D /* DashboardSensorTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -370,6 +373,7 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-StanfordFarmApp2018/Pods-StanfordFarmApp2018-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GTProgressBar/GTProgressBar.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
@@ -377,6 +381,7 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTProgressBar.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
@@ -450,6 +455,7 @@
 			files = (
 				468FB67F211946CB004B9CBA /* AAChartModel.swift in Sources */,
 				464C58E5211290060079487A /* DetailViewController.swift in Sources */,
+				4633E1672119722B006DAF0D /* DashboardSensorTableViewCell.swift in Sources */,
 				468FB681211946CB004B9CBA /* AASeriesElement.swift in Sources */,
 				4623F25F2118DC69005F1B15 /* DashboardViewController.swift in Sources */,
 				4623F2612119022B005F1B15 /* Tools.swift in Sources */,

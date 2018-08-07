@@ -13,7 +13,7 @@ class MasterViewController: UITableViewController {
 
     var detailViewController: DetailViewController? = nil
     var objects = [Any]()
-    var masters = ["DASH", "BED 1", "BED 2", "BED 3", "BED 4", "BED 5", "BED 6"]
+    var masters = ["DASHBOARD", "BED 1", "BED 2", "BED 3", "BED 4", "BED 5", "BED 6"]
     
     var data:[String:[String:AnyObject]]! = [:]
     var G1:[Int]! = []
