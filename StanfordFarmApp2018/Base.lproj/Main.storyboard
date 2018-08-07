@@ -186,7 +186,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="703" height="1400"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yBp-5e-oRq">
-                                        <rect key="frame" x="0.0" y="0.0" width="703" height="970"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="703" height="1120"/>
                                         <subviews>
                                             <collectionView autoresizesSubviews="NO" clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="1Hq-ro-OzY">
                                                 <rect key="frame" x="0.0" y="16" width="703" height="100"/>
@@ -249,9 +249,9 @@
                                                 </cells>
                                             </collectionView>
                                             <view autoresizesSubviews="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a8t-sk-UVq">
-                                                <rect key="frame" x="16" y="398" width="400" height="250"/>
+                                                <rect key="frame" x="16" y="548" width="400" height="250"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Active Sensors" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bzh-bu-YKg">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sensors" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bzh-bu-YKg">
                                                         <rect key="frame" x="16" y="16" width="376" height="22"/>
                                                         <fontDescription key="fontDescription" name="Charter-Bold" family="Charter" pointSize="18"/>
                                                         <nil key="textColor"/>
@@ -268,7 +268,7 @@
                                                 </constraints>
                                             </view>
                                             <view autoresizesSubviews="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F9B-DY-0JA">
-                                                <rect key="frame" x="432" y="398" width="255" height="250"/>
+                                                <rect key="frame" x="432" y="548" width="255" height="250"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9xU-c2-wY4">
                                                         <rect key="frame" x="0.0" y="0.0" width="255" height="106"/>
@@ -355,24 +355,32 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ESF-l6-Fhd">
-                                                <rect key="frame" x="16" y="132" width="671" height="250"/>
+                                                <rect key="frame" x="16" y="132" width="671" height="400"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Charts" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nwi-Ou-sdA">
-                                                        <rect key="frame" x="16" y="16" width="55" height="22"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Vitals" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nwi-Ou-sdA">
+                                                        <rect key="frame" x="16" y="16" width="47" height="22"/>
                                                         <fontDescription key="fontDescription" name="Charter-Bold" family="Charter" pointSize="18"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yfJ-2t-f8Q">
+                                                        <rect key="frame" x="8" y="54" width="663" height="346"/>
+                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    </view>
                                                 </subviews>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
+                                                    <constraint firstItem="yfJ-2t-f8Q" firstAttribute="leading" secondItem="ESF-l6-Fhd" secondAttribute="leading" constant="8" id="2hK-hl-JwU"/>
                                                     <constraint firstItem="Nwi-Ou-sdA" firstAttribute="leading" secondItem="ESF-l6-Fhd" secondAttribute="leading" constant="16" id="NBz-Tt-ZDB"/>
                                                     <constraint firstItem="Nwi-Ou-sdA" firstAttribute="top" secondItem="ESF-l6-Fhd" secondAttribute="top" constant="16" id="Vnk-ZQ-pd1"/>
-                                                    <constraint firstAttribute="height" constant="250" id="bev-Q4-h1q"/>
+                                                    <constraint firstAttribute="bottom" secondItem="yfJ-2t-f8Q" secondAttribute="bottom" id="WGj-6A-1Fq"/>
+                                                    <constraint firstAttribute="trailing" secondItem="yfJ-2t-f8Q" secondAttribute="trailing" id="YuJ-sS-4cJ"/>
+                                                    <constraint firstAttribute="height" constant="400" id="bev-Q4-h1q"/>
+                                                    <constraint firstItem="yfJ-2t-f8Q" firstAttribute="top" secondItem="Nwi-Ou-sdA" secondAttribute="bottom" constant="16" id="fWl-gE-j43"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iGw-hK-MMo">
-                                                <rect key="frame" x="16" y="664" width="671" height="250"/>
+                                                <rect key="frame" x="16" y="814" width="671" height="250"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xaa-aQ-zDb">
                                                         <rect key="frame" x="0.0" y="0.0" width="213" height="250"/>
@@ -445,7 +453,7 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OtI-jD-urS">
-                                                <rect key="frame" x="8" y="930" width="687" height="20"/>
+                                                <rect key="frame" x="8" y="1080" width="687" height="20"/>
                                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="20" id="ugX-Hm-gm2"/>
@@ -497,6 +505,7 @@
                     <connections>
                         <outlet property="activeSensorsView" destination="a8t-sk-UVq" id="SFo-a9-7Ih"/>
                         <outlet property="calendarView" destination="FIg-dA-89W" id="cW0-Eu-Vfw"/>
+                        <outlet property="chartView" destination="yfJ-2t-f8Q" id="bdN-sM-8rG"/>
                         <outlet property="chartsView" destination="ESF-l6-Fhd" id="gRd-gv-4M3"/>
                         <outlet property="irrigationCollectionView" destination="1Hq-ro-OzY" id="xW2-JB-wRa"/>
                         <outlet property="messagesView" destination="xaa-aQ-zDb" id="KPs-dy-XDB"/>
