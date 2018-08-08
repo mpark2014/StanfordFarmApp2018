@@ -9,8 +9,12 @@
 import UIKit
 import FirebaseDatabase
 
-class MasterViewController: UITableViewController {
+class MasterViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
+    @IBOutlet weak var mainTableView: UITableView!
+    @IBOutlet weak var dashContainer: UIView!
+    @IBOutlet weak var bedContainer: UIView!
+    
     var detailViewController: DetailViewController? = nil
     var objects = [Any]()
     var masters = ["DASHBOARD", "BED 1", "BED 2", "BED 3", "BED 4", "BED 5", "BED 6"]
@@ -22,17 +26,23 @@ class MasterViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let split = splitViewController {
-            let controllers = split.viewControllers
-            detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
-        }
+        self.mainTableView.delegate = self
+        self.mainTableView.dataSource = self
+        
+        bedContainer.isHidden = true
         
         firebaseGet()
+        
+//        if let split = splitViewController {
+//            print("split VC")
+//            let controllers = split.viewControllers
+//            detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
+//        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: true, scrollPosition: UITableViewScrollPosition.top)
+//        self.mainTableView.selectRow(at: IndexPath(row: 0, section: 0), animated: true, scrollPosition: UITableViewScrollPosition.top)
     }
     
     func firebaseGet() {
@@ -45,38 +55,39 @@ class MasterViewController: UITableViewController {
             self.data[key] = item
             
             DispatchQueue.main.async() {
-                self.tableView.reloadData()
+                self.mainTableView.reloadData()
             }
         })
     }
 
     // MARK: - Segues
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showDetail" {
-            if let indexPath = tableView.indexPathForSelectedRow {
-                let title = masters[indexPath.row]
-                
-                let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
-                
-                controller.isBed = indexPath.row==0 ? false : true
-                controller.detailItem = title
-                controller.data = data
-            }
-        }
-    }
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if segue.identifier == "showDetail" {
+//            if let indexPath = tableView.indexPathForSelectedRow {
+//                print("segued")
+//                let title = masters[indexPath.row]
+//
+//                let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
+//
+//                controller.isBed = indexPath.row==0 ? false : true
+//                controller.detailItem = title
+//                controller.data = data
+//            }
+//        }
+//    }
 
     // MARK: - Table View
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return masters.count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "masterCell", for: indexPath) as! MasterTableViewCell
 
         let title = masters[indexPath.row]
@@ -92,12 +103,7 @@ class MasterViewController: UITableViewController {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    }
-
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     }
 }
 

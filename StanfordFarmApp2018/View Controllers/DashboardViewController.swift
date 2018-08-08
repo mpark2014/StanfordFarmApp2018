@@ -16,8 +16,8 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     @IBOutlet weak var samplingSettingsView: UIView!
     @IBOutlet weak var waterConsumptionVIew: UIView!
     @IBOutlet weak var chartsView: UIView!
-    @IBOutlet weak var calendarView: UIView!
-    @IBOutlet weak var irrigationRequestsView: UIView!
+    @IBOutlet weak var irrigationQueueView: UIView!
+    @IBOutlet weak var messagesView: UIView!
     @IBOutlet weak var chartView: UIView!
     @IBOutlet weak var sensorsTableView: UITableView!
     @IBOutlet weak var scheduleIrrigationView: UIView!
@@ -27,11 +27,14 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     @IBOutlet weak var irrigationUpdatedLabel: UILabel!
     @IBOutlet weak var sensorsSamplingValue: UILabel!
     @IBOutlet weak var sensorsUpdatedLabel: UILabel!
+    @IBOutlet weak var scheduleIrrigationCollectionView: UICollectionView!
+    @IBOutlet weak var irrigationQueueTableView: UITableView!
     
     var ref: DatabaseReference!
     var iFlagData:[String:Bool]! = [:]
     var liveSensorData:[String:[String:Int]]! = [:]
     var settings:[String:Int]! = [:]
+    var chartData:[Int]! = [0,0,0,0,0,0]
     
     private var aaChartModel: AAChartModel?
     private var aaChartView: AAChartView?
@@ -43,13 +46,17 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         irrigationCollectionView.dataSource = self
         sensorsTableView.delegate = self
         sensorsTableView.dataSource = self
+        scheduleIrrigationCollectionView.delegate = self
+        scheduleIrrigationCollectionView.dataSource = self
+        irrigationQueueTableView.delegate = self
+        irrigationQueueTableView.dataSource = self
         
         sensorsView.layer.cornerRadius = 4
         samplingSettingsView.layer.cornerRadius = 4
         waterConsumptionVIew.layer.cornerRadius = 4
         chartsView.layer.cornerRadius = 4
-        calendarView.layer.cornerRadius = 4
-        irrigationRequestsView.layer.cornerRadius = 4
+        irrigationQueueView.layer.cornerRadius = 4
+        messagesView.layer.cornerRadius = 4
         scheduleIrrigationView.layer.cornerRadius = 4
         sensorsSamplingSettingsView.layer.cornerRadius = 4
         irrigationSamplingSettingsView.layer.cornerRadius = 4
@@ -61,6 +68,8 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         super.viewWillLayoutSubviews()
         configureChart()
     }
+    
+    // MARK: - Chart Settings
     
     func configureChart() {
         aaChartView = AAChartView()
@@ -75,30 +84,29 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             .title("")
             .subtitle("")
             .dataLabelEnabled(false)
-            .tooltipValueSuffix("℃")
+            .tooltipValueSuffix(" Counts")
             .backgroundColor("#ffffff")
             .animationType(AAChartAnimationType.Bounce)
             .series([
                 AASeriesElement()
-                    .name("Tokyo")
-                    .data([7.0, 6.9, 9.5, 14.5, 18.2, 21.5])
+                    .name("Sensor")
+                    .data(chartData)
                     .toDic()!,
-                
-//                AASeriesElement()
-//                    .name("New York")
-//                    .data([0, 0.8, 5.7, 11.3, 17.0, 22.0])
-//                    .toDic()!,
-//                AASeriesElement()
-//                    .name("Berlin")
-//                    .data([0.9, 0.6, 3.5, 8.4, 13.5, 17.0])
-//                    .toDic()!,
-//                AASeriesElement()
-//                    .name("London")
-//                    .data([3.9, 4.2, 5.7, 8.5, 11.9, 15.2])
-//                    .toDic()!,
                 ])
         
         self.configureChartStyle()
+        aaChartView?.aa_drawChartWithChartModel(aaChartModel!)
+    }
+    
+    func updateChartData() {
+        aaChartModel = aaChartModel?
+            .series([
+                AASeriesElement()
+                    .name("Sensor")
+                    .data(chartData)
+                    .toDic()!,
+                ])
+        
         aaChartView?.aa_drawChartWithChartModel(aaChartModel!)
     }
     
@@ -125,21 +133,27 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             irrigationSamplingValue.text = "\(hours>9 ? "" : "0")\(hours):\(minutes>9 ? "" : "0")\(minutes):\(seconds>9 ? "" : "0")\(seconds)"
         }
         
-        if var iValue = self.settings["sInterval"] {
-            let hours = iValue/(60*60)
-            iValue -= (hours*60*60)
+        if var sValue = self.settings["sInterval"] {
+            let hours = sValue/(60*60)
+            sValue -= (hours*60*60)
             
-            let minutes = iValue/60
-            iValue -= (minutes*60)
+            let minutes = sValue/60
+            sValue -= (minutes*60)
             
-            let seconds = iValue
+            let seconds = sValue
             
             sensorsSamplingValue.text = "\(hours>9 ? "" : "0")\(hours):\(minutes>9 ? "" : "0")\(minutes):\(seconds>9 ? "" : "0")\(seconds)"
         }
         
-        // NEED TO CONNECT LAST UPDATED LABEL
-//        irrigationUpdatedLabel
-//        sensorsUpdatedLabel
+        if let iUValue = self.settings["iLastUpdated"] as? Int {
+            let date = Date(timeIntervalSince1970: (Double(iUValue/1000)))
+            irrigationUpdatedLabel.text = "Last Updated: \(date.formatDate())"
+        }
+        
+        if let sUValue = self.settings["sLastUpdated"] as? Int {
+            let date = Date(timeIntervalSince1970: (Double(sUValue/1000)))
+            sensorsUpdatedLabel.text = "Last Updated: \(date.formatDate())"
+        }
     }
     
     func firebaseGet() {
@@ -164,10 +178,17 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
                 var markerMut = marker
                 markerMut.insert(" ", at: markerMut.index(before: markerMut.endIndex))
                 self.liveSensorData["\(key) | \(markerMut.capitalized)"] = item
+                
+                if marker.last == "1" {
+                    if let bedNo = Int(String(key.last!)) {
+                        self.chartData[bedNo-1] = item["value"] as! Int
+                    }
+                }
             }
             
             DispatchQueue.main.async() {
                 self.sensorsTableView.reloadData()
+                self.updateChartData()
             }
         })
         
@@ -199,32 +220,70 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
                 var markerMut = marker
                 markerMut.insert(" ", at: markerMut.index(before: markerMut.endIndex))
                 self.liveSensorData["\(key) | \(markerMut.capitalized)"] = item
+                
+                if marker.last == "1" {
+                    if let bedNo = Int(String(key.last!)) {
+                        self.chartData[bedNo-1] = item["value"] as! Int
+                    }
+                }
             }
             
             DispatchQueue.main.async() {
                 self.sensorsTableView.reloadData()
+                self.updateChartData()
+            }
+        })
+        
+        ref.child("Settings").observe(DataEventType.childChanged, with: { (snapshot) in
+            let key = snapshot.key
+            let value = snapshot.value as! Int
+            self.settings[key] = value
+            
+            DispatchQueue.main.async() {
+                self.configureSamplingSettings()
             }
         })
     }
     
-    // MARK: Collection View Methods
+    // MARK: - Collection View Methods
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 6
+        switch collectionView.tag {
+        case 0:
+            return 6
+        case 1:
+            return 6
+        default:
+            return 0
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = irrigationCollectionView.dequeueReusableCell(withReuseIdentifier: "dashboardIrrigationCell", for: indexPath) as! DashboardIrrigationCollectionViewCell
-        
-        cell.mainTitle.text = "Bed " + String(indexPath.row+1)
-        cell.irrigationSwitch = self.iFlagData["G\(indexPath.row+1)"]
-        
-        return cell
+        switch collectionView.tag {
+        case 0:
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "dashboardIrrigationCell", for: indexPath) as! DashboardIrrigationCollectionViewCell
+            
+            cell.mainTitle.text = "Bed " + String(indexPath.row+1)
+            cell.irrigationSwitch = self.iFlagData["G\(indexPath.row+1)"]
+            return cell
+        case 1:
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "dashScheduleIrrigationCell", for: indexPath) as! DashboardScheduleIrrigationCollectionViewCell
+            
+            cell.mainTitle.text = "Bed " + String(indexPath.row+1)
+            return cell
+        default:
+            return UICollectionViewCell()
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let iSwitch = self.iFlagData["G\(indexPath.row+1)"] {
-            self.ref.child("iFlag/G\(indexPath.row+1)").setValue(!iSwitch)
+        switch collectionView.tag {
+        case 0:
+            if let iSwitch = self.iFlagData["G\(indexPath.row+1)"] {
+                self.ref.child("iFlag/G\(indexPath.row+1)").setValue(!iSwitch)
+            }
+        default:
+            return
         }
     }
     
@@ -232,30 +291,64 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        var width = collectionView.frame.width
-        width = (width - (7*16))/6
-        return CGSize(width: width, height: collectionView.frame.height)
-        
+        switch collectionView.tag {
+        case 0:
+            var width = collectionView.frame.width
+            width = (width - (7*16))/6
+            return CGSize(width: width, height: collectionView.frame.height)
+        case 1:
+            var width = collectionView.frame.width
+            width = width - (2*16)
+            return CGSize(width: width, height: collectionView.frame.height)
+        default:
+            return CGSize()
+        }
     }
     
-    // MARK: Table View Methods
+    // MARK: - Table View Methods
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return liveSensorData.count
+        switch tableView.tag {
+        case 0:
+            return liveSensorData.count
+        case 1:
+            return 6
+        default:
+            return 0
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "sensorsTableViewCell")! as! DashboardSensorTableViewCell
-        var keys = Array(liveSensorData.keys)
-        keys.sort()
-        let key = keys[indexPath.row]
-        let value = liveSensorData[key] as! [String:Int]
-        
-        cell.isActive = (value["usage"] == 0) ? false : true
-        cell.mainTitle.text = key
-        cell.valueLabel.text = String(value["value"]!)
-        
-        return cell
+        switch tableView.tag {
+        case 0:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "sensorsTableViewCell")! as! DashboardSensorTableViewCell
+            var keys = Array(liveSensorData.keys)
+            keys.sort()
+            let key = keys[indexPath.row]
+            let value = liveSensorData[key] as! [String:Int]
+            
+            cell.isActive = (value["usage"] == 0) ? false : true
+            cell.mainTitle.text = key
+            cell.valueLabel.text = String(value["value"]!)
+            
+            return cell
+        case 1:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "irrigationQueueCell")!
+            return cell
+        default:
+            return UITableViewCell()
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch tableView.tag {
+        case 0:
+            return tableView.frame.height/10
+        case 1:
+            return tableView.frame.height/6
+        default:
+            return 0
+        }
     }
     
 }

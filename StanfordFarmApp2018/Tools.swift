@@ -18,3 +18,12 @@ extension UIImageView {
         self.tintColor = color
     }
 }
+
+extension Date {
+    func formatDate() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US")
+        dateFormatter.setLocalizedDateFormatFromTemplate("M.d.yy, h:mm a")
+        return dateFormatter.string(from: self)
+    }
+}
