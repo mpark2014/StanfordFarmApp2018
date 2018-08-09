@@ -15,7 +15,8 @@ class MasterViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @IBOutlet weak var dashContainer: UIView!
     @IBOutlet weak var bedContainer: UIView!
     
-    var detailViewController: DetailViewController? = nil
+    var bedViewController = BedViewController()
+    
     var objects = [Any]()
     var masters = ["DASHBOARD", "BED 1", "BED 2", "BED 3", "BED 4", "BED 5", "BED 6"]
     
@@ -32,12 +33,6 @@ class MasterViewController: UIViewController, UITableViewDelegate, UITableViewDa
         bedContainer.isHidden = true
         
         firebaseGet()
-        
-//        if let split = splitViewController {
-//            print("split VC")
-//            let controllers = split.viewControllers
-//            detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
-//        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -62,7 +57,13 @@ class MasterViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
     // MARK: - Segues
 
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "bedEmbed" {
+            if let bedViewController = segue.destination as? BedViewController {
+                self.bedViewController = bedViewController
+            }
+        }
+        
 //        if segue.identifier == "showDetail" {
 //            if let indexPath = tableView.indexPathForSelectedRow {
 //                print("segued")
@@ -75,7 +76,7 @@ class MasterViewController: UIViewController, UITableViewDelegate, UITableViewDa
 //                controller.data = data
 //            }
 //        }
-//    }
+    }
 
     // MARK: - Table View
 
@@ -104,6 +105,19 @@ class MasterViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.row > 0 {
+            if bedContainer.isHidden {
+                switchContainers()
+            }
+            self.bedViewController.bedNo = indexPath.row
+        } else if indexPath.row == 0 && dashContainer.isHidden {
+            switchContainers()
+        }
+    }
+    
+    func switchContainers() {
+        dashContainer.isHidden = !dashContainer.isHidden
+        bedContainer.isHidden = !bedContainer.isHidden
     }
 }
 

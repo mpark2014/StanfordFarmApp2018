@@ -29,6 +29,10 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     @IBOutlet weak var sensorsUpdatedLabel: UILabel!
     @IBOutlet weak var scheduleIrrigationCollectionView: UICollectionView!
     @IBOutlet weak var irrigationQueueTableView: UITableView!
+    @IBOutlet weak var scheduleIrrigationLeftArrowImage: UIImageView!
+    @IBOutlet weak var scheduleIrrigationLeftArrowButton: UIButton!
+    @IBOutlet weak var scheduleIrrigationRightArrowImage: UIImageView!
+    @IBOutlet weak var scheduleIrrigationRightArrowButton: UIButton!
     
     var ref: DatabaseReference!
     var iFlagData:[String:Bool]! = [:]
@@ -245,6 +249,24 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         })
     }
     
+    // MARK: - Actions
+    
+    @IBAction func scheduleIrrigationRightTapped(_ sender: Any) {
+        let currentIndex = Int(self.scheduleIrrigationCollectionView.contentOffset.x / self.scheduleIrrigationCollectionView.frame.width)
+        if currentIndex < 5 {
+            let currentIndexPath = IndexPath(item: currentIndex+1, section: 0)
+            scheduleIrrigationCollectionView.scrollToItem(at: currentIndexPath, at: .centeredHorizontally, animated: true)
+        }
+    }
+    
+    @IBAction func scheduleIrrigationLeftTapped(_ sender: Any) {
+        let currentIndex = Int(self.scheduleIrrigationCollectionView.contentOffset.x / self.scheduleIrrigationCollectionView.frame.width)
+        if currentIndex > 0 {
+            let currentIndexPath = IndexPath(item: currentIndex-1, section: 0)
+            scheduleIrrigationCollectionView.scrollToItem(at: currentIndexPath, at: .centeredHorizontally, animated: true)
+        }
+    }
+    
     // MARK: - Collection View Methods
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -270,10 +292,30 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "dashScheduleIrrigationCell", for: indexPath) as! DashboardScheduleIrrigationCollectionViewCell
             
             cell.mainTitle.text = "Bed " + String(indexPath.row+1)
+            cell.startConfirmButton.tag = indexPath.row
+            cell.endConfirmButton.tag = indexPath.row
+            cell.deleteButton.tag = indexPath.row
+            cell.hideEndConfirm = true
+            cell.startConfirmButton.addTarget(self, action: #selector(startConfirmButton(sender:)), for: .touchUpInside)
+            cell.endConfirmButton.addTarget(self, action: #selector(endConfirmButton(sender:)), for: .touchUpInside)
+            cell.deleteButton.addTarget(self, action: #selector(deleteConfirmButton(sender:)), for: .touchUpInside)
+            
             return cell
         default:
             return UICollectionViewCell()
         }
+    }
+    
+    @IBAction func startConfirmButton(sender: UIButton) {
+        print("\(sender.tag) start confirm clicked")
+    }
+    
+    @IBAction func deleteConfirmButton(sender: UIButton) {
+        print("\(sender.tag) delete confirm clicked")
+    }
+    
+    @IBAction func endConfirmButton(sender: UIButton) {
+        print("\(sender.tag) end confirm clicked")
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -290,11 +332,11 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
         switch collectionView.tag {
         case 0:
             var width = collectionView.frame.width
             width = (width - (7*16))/6
+            print(width)
             return CGSize(width: width, height: collectionView.frame.height)
         case 1:
             var width = collectionView.frame.width
