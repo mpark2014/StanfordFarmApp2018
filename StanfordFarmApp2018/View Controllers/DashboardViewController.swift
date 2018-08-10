@@ -39,6 +39,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     var liveSensorData:[String:[String:Int]]! = [:]
     var settings:[String:Int]! = [:]
     var chartData:[Int]! = [0,0,0,0,0,0]
+    var scheduledIrrigationStartValue:Date? = Date()
     
     private var aaChartModel: AAChartModel?
     private var aaChartView: AAChartView?
@@ -296,6 +297,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             cell.endConfirmButton.tag = indexPath.row
             cell.deleteButton.tag = indexPath.row
             cell.hideEndConfirm = true
+            cell.datePicker.date = Date()
             cell.startConfirmButton.addTarget(self, action: #selector(startConfirmButton(sender:)), for: .touchUpInside)
             cell.endConfirmButton.addTarget(self, action: #selector(endConfirmButton(sender:)), for: .touchUpInside)
             cell.deleteButton.addTarget(self, action: #selector(deleteConfirmButton(sender:)), for: .touchUpInside)
@@ -307,15 +309,57 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     }
     
     @IBAction func startConfirmButton(sender: UIButton) {
-        print("\(sender.tag) start confirm clicked")
+        print("Bed \(sender.tag+1) start confirm clicked")
+        let currentIndex = Int(self.scheduleIrrigationCollectionView.contentOffset.x / self.scheduleIrrigationCollectionView.frame.width)
+        let currentIndexPath = IndexPath(item: currentIndex, section: 0)
+        let currentCell = scheduleIrrigationCollectionView.cellForItem(at: currentIndexPath) as! DashboardScheduleIrrigationCollectionViewCell
+        
+        var date = currentCell.datePicker.date
+        let timeInterval = floor(date.timeIntervalSince1970 / 60.0) * 60
+        date = Date(timeIntervalSince1970: timeInterval)
+        scheduledIrrigationStartValue = date
     }
     
     @IBAction func deleteConfirmButton(sender: UIButton) {
-        print("\(sender.tag) delete confirm clicked")
+        print("Bed \(sender.tag+1) delete confirm clicked")
+        scheduledIrrigationStartValue = nil
     }
     
     @IBAction func endConfirmButton(sender: UIButton) {
-        print("\(sender.tag) end confirm clicked")
+        print("Bed \(sender.tag+1) end confirm clicked")
+        let currentIndex = Int(self.scheduleIrrigationCollectionView.contentOffset.x / self.scheduleIrrigationCollectionView.frame.width)
+        let currentIndexPath = IndexPath(item: currentIndex, section: 0)
+        let currentCell = scheduleIrrigationCollectionView.cellForItem(at: currentIndexPath) as! DashboardScheduleIrrigationCollectionViewCell
+        
+        var date = currentCell.datePicker.date
+        let timeInterval = floor(date.timeIntervalSince1970 / 60.0) * 60
+        date = Date(timeIntervalSince1970: timeInterval)
+        
+        if date < Date() {
+            // HANDLE ERROR
+            print("ERROR1")
+        } else if date <= scheduledIrrigationStartValue! {
+            // HANDLE ERROR
+            print("ERROR2")
+        } else {
+            print(scheduledIrrigationStartValue!)
+            
+            let iQueueListItem = [
+                "bed": currentIndex+1,
+                "blockBed": "G\(currentIndex+1)",
+                "end": timeInterval*1000,
+                "start": scheduledIrrigationStartValue!.timeIntervalSince1970*1000,
+                "type": 1
+                ] as [String:Any]
+            self.ref.child("iQueueList").childByAutoId().setValue(iQueueListItem)
+            
+            let iQueueBedItem = [
+                "end": timeInterval*1000,
+                "start": scheduledIrrigationStartValue!.timeIntervalSince1970*1000,
+                "type": 1
+                ] as [String:Any]
+            self.ref.child("iQueueBed/G\(currentIndex+1)").childByAutoId().setValue(iQueueBedItem)
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -324,6 +368,20 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             if let iSwitch = self.iFlagData["G\(indexPath.row+1)"] {
                 self.ref.child("iFlag/G\(indexPath.row+1)").setValue(!iSwitch)
             }
+        default:
+            return
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        switch collectionView.tag {
+        case 0:
+            return
+        case 1:
+            scheduledIrrigationStartValue = nil
+            let scheduleIrrigationCell = cell as! DashboardScheduleIrrigationCollectionViewCell
+            scheduleIrrigationCell.hideEndConfirm = true
+            scheduleIrrigationCell.datePicker.date = Date()
         default:
             return
         }
@@ -385,9 +443,9 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch tableView.tag {
         case 0:
-            return tableView.frame.height/10
+            return (tableView.frame.height+1)/10
         case 1:
-            return tableView.frame.height/6
+            return (tableView.frame.height+1)/6
         default:
             return 0
         }

@@ -20,6 +20,7 @@ class DashboardScheduleIrrigationCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var deleteButton: UIButton!
     @IBOutlet weak var endConfirmButton: UIButton!
     @IBOutlet weak var startLabel: UILabel!
+    @IBOutlet weak var datePicker: UIDatePicker!
     
     var hideEndConfirm:Bool = true {
         didSet {
@@ -50,6 +51,11 @@ class DashboardScheduleIrrigationCollectionViewCell: UICollectionViewCell {
     }
     
     @IBAction func startConfirmButtonTapped(_ sender: Any) {
+        var date = self.datePicker.date
+        let timeInterval = floor(date.timeIntervalSince1970 / 60.0) * 60
+        date = Date(timeIntervalSince1970: timeInterval)
+        startLabel.text = "Start: \(date.formatDate())"
+        
         UIView.animate(withDuration: 0.2, animations: {
             self.startConfirmView.alpha = 0
         }) { (complete) in

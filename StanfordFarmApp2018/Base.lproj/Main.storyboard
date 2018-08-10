@@ -231,10 +231,10 @@
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
                                                                         <view autoresizesSubviews="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7zb-bP-Ihn">
-                                                                            <rect key="frame" x="126.5" y="10" width="8" height="8"/>
+                                                                            <rect key="frame" x="126.5" y="11" width="6" height="6"/>
                                                                             <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <constraints>
-                                                                                <constraint firstAttribute="height" constant="8" id="3oh-G5-6HH"/>
+                                                                                <constraint firstAttribute="height" constant="6" id="3oh-G5-6HH"/>
                                                                                 <constraint firstAttribute="width" secondItem="7zb-bP-Ihn" secondAttribute="height" multiplier="1:1" id="Plx-TI-Nfi"/>
                                                                             </constraints>
                                                                         </view>
@@ -540,6 +540,7 @@
                                                                             <constraint firstItem="GKD-wN-bQI" firstAttribute="leading" secondItem="GOf-1n-pT4" secondAttribute="leading" id="vuD-cJ-sJm"/>
                                                                         </constraints>
                                                                         <connections>
+                                                                            <outlet property="datePicker" destination="Mfh-U6-gu8" id="n9Z-Qp-esz"/>
                                                                             <outlet property="deleteButton" destination="NOh-Xq-Nng" id="GJh-NT-6qa"/>
                                                                             <outlet property="deleteImageView" destination="hoY-9n-qlw" id="boC-fi-bTX"/>
                                                                             <outlet property="deleteView" destination="wbm-Gm-Gew" id="pmk-Do-sCX"/>
