@@ -309,7 +309,7 @@
                                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="16" maxY="0.0"/>
                                                                 <prototypes>
-                                                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="irrigationQueueCell" id="T7a-x1-Hzc">
+                                                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="irrigationQueueCell" id="T7a-x1-Hzc" customClass="DashIrrigationQueueTableViewCell" customModule="StanfordFarmApp2018" customModuleProvider="target">
                                                                         <rect key="frame" x="0.0" y="28" width="422" height="40"/>
                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="T7a-x1-Hzc" id="aAB-fO-djb">
@@ -352,6 +352,11 @@
                                                                                 <constraint firstItem="7nQ-W8-FYk" firstAttribute="centerY" secondItem="aAB-fO-djb" secondAttribute="centerY" id="xuy-hW-xoj"/>
                                                                             </constraints>
                                                                         </tableViewCellContentView>
+                                                                        <connections>
+                                                                            <outlet property="bedLabel" destination="tll-Gf-HUM" id="kzN-OJ-i1T"/>
+                                                                            <outlet property="deleteButton" destination="MeL-0b-Aav" id="kR2-L3-yPR"/>
+                                                                            <outlet property="detailLabel" destination="7nQ-W8-FYk" id="a5q-S2-hE3"/>
+                                                                        </connections>
                                                                     </tableViewCell>
                                                                 </prototypes>
                                                             </tableView>

@@ -20,10 +20,17 @@ extension UIImageView {
 }
 
 extension Date {
-    func formatDate() -> String {
+    func formatDate1() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US")
         dateFormatter.setLocalizedDateFormatFromTemplate("M.d.yy, h:mm a")
+        return dateFormatter.string(from: self)
+    }
+    
+    func formatDate2() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US")
+        dateFormatter.setLocalizedDateFormatFromTemplate("h:mm a")
         return dateFormatter.string(from: self)
     }
 }

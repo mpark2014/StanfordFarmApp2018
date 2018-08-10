@@ -54,7 +54,7 @@ class DashboardScheduleIrrigationCollectionViewCell: UICollectionViewCell {
         var date = self.datePicker.date
         let timeInterval = floor(date.timeIntervalSince1970 / 60.0) * 60
         date = Date(timeIntervalSince1970: timeInterval)
-        startLabel.text = "Start: \(date.formatDate())"
+        startLabel.text = "Start: \(date.formatDate1())"
         
         UIView.animate(withDuration: 0.2, animations: {
             self.startConfirmView.alpha = 0

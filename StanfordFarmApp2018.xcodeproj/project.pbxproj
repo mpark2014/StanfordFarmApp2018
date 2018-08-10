@@ -27,6 +27,8 @@
 		468FB682211946CB004B9CBA /* AAJSFiles.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 468FB67D211946CB004B9CBA /* AAJSFiles.bundle */; };
 		468FE77B2112A03D00D64B77 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 468FE77A2112A03C00D64B77 /* GoogleService-Info.plist */; };
 		46BD13F3211B74E300E3A06C /* BedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46BD13F2211B74E300E3A06C /* BedViewController.swift */; };
+		46BD13F5211D3CC700E3A06C /* iQueueItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46BD13F4211D3CC700E3A06C /* iQueueItem.swift */; };
+		46BD13F8211D4B5500E3A06C /* DashIrrigationQueueTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46BD13F7211D4B5500E3A06C /* DashIrrigationQueueTableViewCell.swift */; };
 		6B4A2905D79DBBEE246502D2 /* Pods_StanfordFarmApp2018.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1462F36535FDE4365E2D130 /* Pods_StanfordFarmApp2018.framework */; };
 		B5DA22849A35C75235A88797 /* Pods_StanfordFarmApp2018UITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5424F7661FE0FF8E2AD58E4E /* Pods_StanfordFarmApp2018UITests.framework */; };
 		E3BBA6F7E0B9D0940326BD04 /* Pods_StanfordFarmApp2018Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14964370CAB3E98C8308A197 /* Pods_StanfordFarmApp2018Tests.framework */; };
@@ -79,6 +81,8 @@
 		468FB67D211946CB004B9CBA /* AAJSFiles.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AAJSFiles.bundle; sourceTree = "<group>"; };
 		468FE77A2112A03C00D64B77 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		46BD13F2211B74E300E3A06C /* BedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BedViewController.swift; sourceTree = "<group>"; };
+		46BD13F4211D3CC700E3A06C /* iQueueItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iQueueItem.swift; sourceTree = "<group>"; };
+		46BD13F7211D4B5500E3A06C /* DashIrrigationQueueTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashIrrigationQueueTableViewCell.swift; sourceTree = "<group>"; };
 		5424F7661FE0FF8E2AD58E4E /* Pods_StanfordFarmApp2018UITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StanfordFarmApp2018UITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		82C6F6776B50FDF8D31E2A76 /* Pods-StanfordFarmApp2018Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StanfordFarmApp2018Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-StanfordFarmApp2018Tests/Pods-StanfordFarmApp2018Tests.release.xcconfig"; sourceTree = "<group>"; };
 		8FD3E678075EB674B6BE6642 /* Pods-StanfordFarmApp2018UITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StanfordFarmApp2018UITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-StanfordFarmApp2018UITests/Pods-StanfordFarmApp2018UITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -122,6 +126,7 @@
 				4623F2582118D539005F1B15 /* MasterTableViewCell.swift */,
 				4633E1662119722B006DAF0D /* DashboardSensorTableViewCell.swift */,
 				4633E168211A7338006DAF0D /* DashboardScheduleIrrigationCollectionViewCell.swift */,
+				46BD13F7211D4B5500E3A06C /* DashIrrigationQueueTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -165,6 +170,7 @@
 				464C58E0211290060079487A /* AppDelegate.swift */,
 				464C58E6211290060079487A /* Main.storyboard */,
 				4623F2602119022B005F1B15 /* Tools.swift */,
+				46BD13F6211D3CCE00E3A06C /* Models */,
 				4623F25D2118DADD005F1B15 /* View Controllers */,
 				4623F25C2118DAC5005F1B15 /* Cells */,
 				464C58E9211290080079487A /* Assets.xcassets */,
@@ -211,6 +217,14 @@
 				468FB67C211946CB004B9CBA /* AASeriesElement.swift */,
 			);
 			path = AAChartCreator;
+			sourceTree = "<group>";
+		};
+		46BD13F6211D3CCE00E3A06C /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				46BD13F4211D3CC700E3A06C /* iQueueItem.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		77EDB337C34E4058CD314769 /* Frameworks */ = {
@@ -460,7 +474,9 @@
 				468FB681211946CB004B9CBA /* AASeriesElement.swift in Sources */,
 				4623F25F2118DC69005F1B15 /* DashboardViewController.swift in Sources */,
 				4623F2612119022B005F1B15 /* Tools.swift in Sources */,
+				46BD13F5211D3CC700E3A06C /* iQueueItem.swift in Sources */,
 				468FB67E211946CB004B9CBA /* AAChartView.swift in Sources */,
+				46BD13F8211D4B5500E3A06C /* DashIrrigationQueueTableViewCell.swift in Sources */,
 				4623F25B2118DA7E005F1B15 /* DashboardIrrigationCollectionViewCell.swift in Sources */,
 				464C58E3211290060079487A /* MasterViewController.swift in Sources */,
 				464C58E1211290060079487A /* AppDelegate.swift in Sources */,

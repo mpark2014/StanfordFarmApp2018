@@ -40,6 +40,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     var settings:[String:Int]! = [:]
     var chartData:[Int]! = [0,0,0,0,0,0]
     var scheduledIrrigationStartValue:Date? = Date()
+    var iQueueArray:[iQueueItem]! = []
     
     private var aaChartModel: AAChartModel?
     private var aaChartView: AAChartView?
@@ -152,12 +153,12 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         
         if let iUValue = self.settings["iLastUpdated"] as? Int {
             let date = Date(timeIntervalSince1970: (Double(iUValue/1000)))
-            irrigationUpdatedLabel.text = "Last Updated: \(date.formatDate())"
+            irrigationUpdatedLabel.text = "Last Updated: \(date.formatDate1())"
         }
         
         if let sUValue = self.settings["sLastUpdated"] as? Int {
             let date = Date(timeIntervalSince1970: (Double(sUValue/1000)))
-            sensorsUpdatedLabel.text = "Last Updated: \(date.formatDate())"
+            sensorsUpdatedLabel.text = "Last Updated: \(date.formatDate1())"
         }
     }
     
@@ -206,6 +207,27 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
                 self.configureSamplingSettings()
             }
         })
+        
+        ref.child("iQueueList").queryOrdered(byChild: "start").observe(DataEventType.childAdded) { (snapshot) in
+            let uuid = snapshot.key
+            let value = snapshot.value as! [String:Any]
+            let bed = value["bed"] as! Int
+            let bedString = value["blockBed"] as! String
+            let start = Date(timeIntervalSince1970: Double((value["start"] as! Int)/1000))
+            let end = Date(timeIntervalSince1970: Double((value["end"] as! Int)/1000))
+            let type = iQueueType(rawValue: value["type"] as! Int)
+            let item = iQueueItem(uuid: uuid, bedNo: bed, bedString: bedString, start: start, end: end, type: type!)
+            
+            if !self.iQueueArray.contains(item) {
+                self.iQueueArray.append(item)
+            }
+            
+            DispatchQueue.main.async() {
+                self.irrigationQueueTableView.reloadData()
+            }
+        }
+        
+        // INSERT MORE IQUEUELIST WATCHDOGS
         
         ref.child("iFlag").observe(DataEventType.childChanged, with: { (snapshot) in
             let key = snapshot.key
@@ -394,7 +416,6 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         case 0:
             var width = collectionView.frame.width
             width = (width - (7*16))/6
-            print(width)
             return CGSize(width: width, height: collectionView.frame.height)
         case 1:
             var width = collectionView.frame.width
@@ -412,7 +433,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         case 0:
             return liveSensorData.count
         case 1:
-            return 6
+            return iQueueArray.count
         default:
             return 0
         }
@@ -433,11 +454,31 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             
             return cell
         case 1:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "irrigationQueueCell")!
+            let cell = tableView.dequeueReusableCell(withIdentifier: "irrigationQueueCell")! as! DashIrrigationQueueTableViewCell
+            let item = iQueueArray[indexPath.row]
+            cell.bedLabel.text = "Bed \(item.bedNo) | "
+            cell.deleteButton.tag = indexPath.row
+            cell.deleteButton.addTarget(self, action: #selector(deleteiQueueItem(sender:)), for: .touchUpInside)
+            
+            if Calendar.current.isDate(item.end, inSameDayAs: item.start) {
+                cell.detailLabel.text = "\(item.start.formatDate1()) - \(item.end.formatDate2())"
+            } else {
+                cell.detailLabel.text = "\(item.start.formatDate1()) - \(item.end.formatDate1())"
+            }
+            
             return cell
         default:
             return UITableViewCell()
         }
+    }
+    
+    @IBAction func deleteiQueueItem(sender: UIButton) {
+        print("Bed \(sender.tag+1) delete button clicked")
+        let item = iQueueArray[sender.tag]
+        self.ref.child("iQueueList/\(item.uuid)").removeValue()
+        let index = IndexPath(row: sender.tag, section: 0)
+        iQueueArray.remove(at: sender.tag)
+        self.irrigationQueueTableView.deleteRows(at: [index], with: .automatic)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
