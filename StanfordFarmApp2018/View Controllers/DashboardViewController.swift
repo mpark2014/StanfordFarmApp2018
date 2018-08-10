@@ -40,7 +40,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     var settings:[String:Int]! = [:]
     var chartData:[Int]! = [0,0,0,0,0,0]
     var scheduledIrrigationStartValue:Date? = Date()
-    var iQueueArray:[iQueueItem]! = []
+    var iQueueArray:[iQueueItem] = []
     
     private var aaChartModel: AAChartModel?
     private var aaChartView: AAChartView?
@@ -208,7 +208,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             }
         })
         
-        ref.child("iQueueList").queryOrdered(byChild: "start").observe(DataEventType.childAdded) { (snapshot) in
+        ref.child("iQueueList").queryOrdered(byChild: "start").observe(.childAdded) { (snapshot) in
             let uuid = snapshot.key
             let value = snapshot.value as! [String:Any]
             let bed = value["bed"] as! Int
@@ -217,9 +217,11 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             let end = Date(timeIntervalSince1970: Double((value["end"] as! Int)/1000))
             let type = iQueueType(rawValue: value["type"] as! Int)
             let item = iQueueItem(uuid: uuid, bedNo: bed, bedString: bedString, start: start, end: end, type: type!)
+
+            print(item)
             
             if !self.iQueueArray.contains(item) {
-                self.iQueueArray.append(item)
+                insertSortedIQueueItem(array: &(self.iQueueArray), element: item)
             }
             
             DispatchQueue.main.async() {

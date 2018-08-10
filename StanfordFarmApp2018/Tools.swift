@@ -34,3 +34,29 @@ extension Date {
         return dateFormatter.string(from: self)
     }
 }
+
+func insertSortedIQueueItem(array: inout [iQueueItem], element: iQueueItem) {
+    var i = array.count-1
+    if array.count == 0 {
+        array.append(element)
+    } else {
+        while i >= 0 {
+            print("entered loop: i = \(i)")
+            if element.start > array[i].start {
+                if (i == array.count-1) {
+                    array.append(element)
+                } else {
+                    print("inserted element")
+                    array.insert(element, at: i)
+                }
+                return
+            } else {
+                if i == 0 {
+                    array.insert(element, at: i)
+                    return
+                }
+                i-=1
+            }
+        }
+    }
+}
