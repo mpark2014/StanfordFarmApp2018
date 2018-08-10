@@ -17,7 +17,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     @IBOutlet weak var waterConsumptionVIew: UIView!
     @IBOutlet weak var chartsView: UIView!
     @IBOutlet weak var irrigationQueueView: UIView!
-    @IBOutlet weak var messagesView: UIView!
+    @IBOutlet weak var statusView: UIView!
     @IBOutlet weak var chartView: UIView!
     @IBOutlet weak var sensorsTableView: UITableView!
     @IBOutlet weak var scheduleIrrigationView: UIView!
@@ -33,6 +33,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     @IBOutlet weak var scheduleIrrigationLeftArrowButton: UIButton!
     @IBOutlet weak var scheduleIrrigationRightArrowImage: UIImageView!
     @IBOutlet weak var scheduleIrrigationRightArrowButton: UIButton!
+    @IBOutlet weak var statusTableView: UITableView!
     
     var ref: DatabaseReference!
     var iFlagData:[String:Bool]! = [:]
@@ -41,6 +42,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     var chartData:[Int]! = [0,0,0,0,0,0]
     var scheduledIrrigationStartValue:Date? = Date()
     var iQueueArray:[iQueueItem] = []
+    var iStatusDict:[String:[iQueueItem]]! = ["G1":[],"G2":[],"G3":[],"G4":[],"G5":[],"G6":[]]
     
     private var aaChartModel: AAChartModel?
     private var aaChartView: AAChartView?
@@ -56,13 +58,15 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         scheduleIrrigationCollectionView.dataSource = self
         irrigationQueueTableView.delegate = self
         irrigationQueueTableView.dataSource = self
+        statusTableView.delegate = self
+        statusTableView.dataSource = self
         
         sensorsView.layer.cornerRadius = 4
         samplingSettingsView.layer.cornerRadius = 4
         waterConsumptionVIew.layer.cornerRadius = 4
         chartsView.layer.cornerRadius = 4
         irrigationQueueView.layer.cornerRadius = 4
-        messagesView.layer.cornerRadius = 4
+        statusView.layer.cornerRadius = 4
         scheduleIrrigationView.layer.cornerRadius = 4
         sensorsSamplingSettingsView.layer.cornerRadius = 4
         irrigationSamplingSettingsView.layer.cornerRadius = 4
@@ -215,10 +219,9 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             let bedString = value["blockBed"] as! String
             let start = Date(timeIntervalSince1970: Double((value["start"] as! Int)/1000))
             let end = Date(timeIntervalSince1970: Double((value["end"] as! Int)/1000))
+            let now = Date()
             let type = iQueueType(rawValue: value["type"] as! Int)
             let item = iQueueItem(uuid: uuid, bedNo: bed, bedString: bedString, start: start, end: end, type: type!)
-
-            print(item)
             
             if !self.iQueueArray.contains(item) {
                 insertSortedIQueueItem(array: &(self.iQueueArray), element: item)
@@ -230,6 +233,30 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         }
         
         // INSERT MORE IQUEUELIST WATCHDOGS
+        
+        ref.child("iQueueBed").queryOrdered(byChild: "start").observe(.childAdded) { (snapshot) in
+            let bedString = snapshot.key
+            var iStatusArray = self.iStatusDict[bedString]!
+            let value = snapshot.value as! [String:[String:Any]]
+            
+            for (snapshotUuid, snapshotItem) in value {
+                let uuid = snapshotUuid
+                let start = Date(timeIntervalSince1970: Double((snapshotItem["start"] as! Int)/1000))
+                let end = Date(timeIntervalSince1970: Double((snapshotItem["end"] as! Int)/1000))
+                let now = Date()
+                let type = iQueueType(rawValue: snapshotItem["type"] as! Int)!
+                let bed = snapshotItem["bed"] as! Int
+                let item = iQueueItem(uuid: uuid, bedNo: bed, bedString: bedString, start: start, end: end, type: type)
+                if !(iStatusArray.contains(item)) && now > start && now < end {
+                    insertSortedIQueueItem(array: &iStatusArray, element: item)
+                }
+            }
+            
+            self.iStatusDict[bedString] = iStatusArray
+            DispatchQueue.main.async() {
+                self.statusTableView.reloadData()
+            }
+        }
         
         ref.child("iFlag").observe(DataEventType.childChanged, with: { (snapshot) in
             let key = snapshot.key
@@ -375,14 +402,17 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
                 "start": scheduledIrrigationStartValue!.timeIntervalSince1970*1000,
                 "type": 1
                 ] as [String:Any]
-            self.ref.child("iQueueList").childByAutoId().setValue(iQueueListItem)
+            let reference = self.ref.child("iQueueList").childByAutoId()
+            reference.setValue(iQueueListItem)
+            let uuid = reference.key
             
             let iQueueBedItem = [
                 "end": timeInterval*1000,
                 "start": scheduledIrrigationStartValue!.timeIntervalSince1970*1000,
+                "bed": currentIndex+1,
                 "type": 1
                 ] as [String:Any]
-            self.ref.child("iQueueBed/G\(currentIndex+1)").childByAutoId().setValue(iQueueBedItem)
+            self.ref.child("iQueueBed/G\(currentIndex+1)/\(uuid)").setValue(iQueueBedItem)
         }
     }
     
@@ -436,6 +466,8 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             return liveSensorData.count
         case 1:
             return iQueueArray.count
+        case 2:
+            return 6
         default:
             return 0
         }
@@ -469,6 +501,18 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             }
             
             return cell
+        case 2:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "dashStatusCell")! as! DashboardStatusTableViewCell
+            let array = iStatusDict["G\(indexPath.row+1)"]!
+            
+            if array.isEmpty {
+                cell.configureNone()
+            } else {
+                let item = array[0]
+                cell.configureType(type: item.type, endTime: item.end.formatDate1())
+                print(iStatusDict["G\(indexPath.row+1)"])
+            }
+            return cell
         default:
             return UITableViewCell()
         }
@@ -477,6 +521,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     @IBAction func deleteiQueueItem(sender: UIButton) {
         print("Bed \(sender.tag+1) delete button clicked")
         let item = iQueueArray[sender.tag]
+        self.ref.child("iQueueBed/\(item.bedString)/\(item.uuid)").removeValue()
         self.ref.child("iQueueList/\(item.uuid)").removeValue()
         let index = IndexPath(row: sender.tag, section: 0)
         iQueueArray.remove(at: sender.tag)
@@ -489,6 +534,8 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             return (tableView.frame.height+1)/10
         case 1:
             return (tableView.frame.height+1)/6
+        case 2:
+            return tableView.frame.height/6
         default:
             return 0
         }
