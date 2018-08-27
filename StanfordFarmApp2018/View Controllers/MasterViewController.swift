@@ -18,7 +18,7 @@ class MasterViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var bedViewController = BedViewController()
     
     var objects = [Any]()
-    var masters = ["DASHBOARD", "BED 1", "BED 2", "BED 3", "BED 4", "BED 5", "BED 6"]
+    var masters = ["DASHBOARD", "BED 1", "BED 2", "BED 3", "BED 4", "BED 5", "BED 6", "BED 7", "BED 8", "BED 9", "BED 10", "BED 11", "BED 12", "BED 13", "BED 14", "BED 15"]
     
     var data:[String:[String:AnyObject]]! = [:]
     var G1:[Int]! = []

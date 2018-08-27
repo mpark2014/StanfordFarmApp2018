@@ -42,7 +42,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     var chartData:[Int]! = [0,0,0,0,0,0]
     var scheduledIrrigationStartValue:Date? = Date()
     var iQueueArray:[iQueueItem] = []
-    var iStatusDict:[String:[iQueueItem]]! = ["G1":[],"G2":[],"G3":[],"G4":[],"G5":[],"G6":[]]
+    var iStatusDict:[String:[iQueueItem]]! = ["G1":[],"G2":[],"G3":[],"G4":[],"G5":[],"G6":[],"G7":[],"G8":[],"G9":[],"G10":[],"G11":[],"G12":[],"G13":[],"G14":[],"G15":[]]
     
     private var aaChartModel: AAChartModel?
     private var aaChartView: AAChartView?
@@ -122,7 +122,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     
     func configureChartStyle() {
         aaChartModel = aaChartModel?
-            .categories(["BED 1", "BED 2", "BED 3", "BED 4", "BED 5", "BED 6"])
+            .categories(["BED 1", "BED 2", "BED 3", "BED 4", "BED 5", "BED 6", "BED 7", "BED 8", "BED 9", "BED 10", "BED 11", "BED 12", "BED 13", "BED 14", "BED 15"])
             .legendEnabled(false)
             .colorsTheme(["#fe117c","#ffc069","#06caf4","#7dffc0"])
             .animationType(AAChartAnimationType.Bounce)
@@ -324,9 +324,9 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch collectionView.tag {
         case 0:
-            return 6
+            return 15
         case 1:
-            return 6
+            return 15
         default:
             return 0
         }
@@ -467,7 +467,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         case 1:
             return iQueueArray.count
         case 2:
-            return 6
+            return 15
         default:
             return 0
         }
@@ -504,6 +504,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: "dashStatusCell")! as! DashboardStatusTableViewCell
             let array = iStatusDict["G\(indexPath.row+1)"]!
+            cell.bedLabel.text = "G\(indexPath.row+1)"
             
             if array.isEmpty {
                 cell.configureNone()

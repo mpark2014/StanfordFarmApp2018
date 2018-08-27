@@ -11,6 +11,7 @@ import UIKit
 class DashboardStatusTableViewCell: UITableViewCell {
 
     @IBOutlet weak var bedView: UIView!
+    @IBOutlet weak var bedLabel: UILabel!
     @IBOutlet weak var statusLabel: UILabel!
     
     func configureNone() {

@@ -136,7 +136,7 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yBp-5e-oRq">
                                         <rect key="frame" x="0.0" y="0.0" width="924" height="1171"/>
                                         <subviews>
-                                            <collectionView autoresizesSubviews="NO" clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="1Hq-ro-OzY">
+                                            <collectionView autoresizesSubviews="NO" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="1Hq-ro-OzY">
                                                 <rect key="frame" x="0.0" y="16" width="924" height="100"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
@@ -682,6 +682,7 @@
                                                                     </constraints>
                                                                 </tableViewCellContentView>
                                                                 <connections>
+                                                                    <outlet property="bedLabel" destination="yan-oe-s40" id="vPU-e9-JZv"/>
                                                                     <outlet property="bedView" destination="lOI-7Z-NVH" id="uvb-qR-2H2"/>
                                                                     <outlet property="statusLabel" destination="e2d-uR-Odl" id="RUj-6h-NGu"/>
                                                                 </connections>
