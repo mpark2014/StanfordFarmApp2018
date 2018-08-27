@@ -39,7 +39,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     var iFlagData:[String:Bool]! = [:]
     var liveSensorData:[String:[String:Int]]! = [:]
     var settings:[String:Int]! = [:]
-    var chartData:[Int]! = [0,0,0,0,0,0]
+    var chartData:[Int]! = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     var scheduledIrrigationStartValue:Date? = Date()
     var iQueueArray:[iQueueItem] = []
     var iStatusDict:[String:[iQueueItem]]! = ["G1":[],"G2":[],"G3":[],"G4":[],"G5":[],"G6":[],"G7":[],"G8":[],"G9":[],"G10":[],"G11":[],"G12":[],"G13":[],"G14":[],"G15":[]]
@@ -182,6 +182,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         
         ref.child("Live").observe(DataEventType.childAdded, with: { (snapshot) in
             let key = snapshot.key
+            var keyMut = key
             let value = (snapshot.value as! [String:[String:Int]])
             
             for (marker, item) in value {
@@ -190,7 +191,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
                 self.liveSensorData["\(key) | \(markerMut.capitalized)"] = item
                 
                 if marker.last == "1" {
-                    if let bedNo = Int(String(key.last!)) {
+                    if let bedNo = Int(String(keyMut.dropFirst())) {
                         self.chartData[bedNo-1] = item["value"] as! Int
                     }
                 }
@@ -478,6 +479,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "sensorsTableViewCell")! as! DashboardSensorTableViewCell
             var keys = Array(liveSensorData.keys)
+            print(keys)
             keys.sort()
             let key = keys[indexPath.row]
             let value = liveSensorData[key] as! [String:Int]
@@ -521,12 +523,13 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     
     @IBAction func deleteiQueueItem(sender: UIButton) {
         print("Bed \(sender.tag+1) delete button clicked")
-        let item = iQueueArray[sender.tag]
+        let item = self.iQueueArray[sender.tag]
         self.ref.child("iQueueBed/\(item.bedString)/\(item.uuid)").removeValue()
         self.ref.child("iQueueList/\(item.uuid)").removeValue()
         let index = IndexPath(row: sender.tag, section: 0)
-        iQueueArray.remove(at: sender.tag)
-        self.irrigationQueueTableView.deleteRows(at: [index], with: .automatic)
+        self.iQueueArray.remove(at: sender.tag)
+        self.irrigationQueueTableView.deleteRows(at: [index], with: .none)
+        self.irrigationQueueTableView.reloadData()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
