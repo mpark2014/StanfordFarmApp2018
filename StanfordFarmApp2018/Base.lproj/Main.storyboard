@@ -355,6 +355,7 @@
                                                                         <connections>
                                                                             <outlet property="bedLabel" destination="tll-Gf-HUM" id="kzN-OJ-i1T"/>
                                                                             <outlet property="deleteButton" destination="MeL-0b-Aav" id="kR2-L3-yPR"/>
+                                                                            <outlet property="deleteImage" destination="f2j-Wc-vcr" id="nf1-nB-qI4"/>
                                                                             <outlet property="detailLabel" destination="7nQ-W8-FYk" id="a5q-S2-hE3"/>
                                                                         </connections>
                                                                     </tableViewCell>
