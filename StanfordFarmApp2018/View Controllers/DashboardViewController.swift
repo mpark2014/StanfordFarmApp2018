@@ -330,6 +330,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             }
         }
         
+        // REVIEW/FIX THIS
         ref.child("iQueueBed").queryOrdered(byChild: "start").observe(.childChanged) { (snapshot) in
             let bedString = snapshot.key
             var iStatusArray = self.iStatusDict[bedString]!
