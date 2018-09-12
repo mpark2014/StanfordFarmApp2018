@@ -19,6 +19,7 @@ class MasterViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     var objects = [Any]()
     var masters = ["DASHBOARD", "BED 1", "BED 2", "BED 3", "BED 4", "BED 5", "BED 6", "BED 7", "BED 8", "BED 9", "BED 10", "BED 11", "BED 12", "BED 13", "BED 14", "BED 15"]
+    var selectedCell = 0
     
     var data:[String:[String:AnyObject]]! = [:]
     var G1:[Int]! = []
@@ -105,13 +106,16 @@ class MasterViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row > 0 {
-            if bedContainer.isHidden {
+        if indexPath.row != selectedCell {
+            selectedCell = indexPath.row
+            if indexPath.row > 0 {
+                if bedContainer.isHidden {
+                    switchContainers()
+                }
+                self.bedViewController.bedNo = indexPath.row
+            } else if indexPath.row == 0 && dashContainer.isHidden {
                 switchContainers()
             }
-            self.bedViewController.bedNo = indexPath.row
-        } else if indexPath.row == 0 && dashContainer.isHidden {
-            switchContainers()
         }
     }
     

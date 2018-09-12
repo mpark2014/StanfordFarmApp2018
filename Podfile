@@ -8,6 +8,7 @@ target 'StanfordFarmApp2018' do
   pod 'Firebase/Core'
   pod 'Firebase/Database'
   pod 'SwiftyJSON'
+  pod 'Charts'
 
   # Pods for StanfordFarmApp2018
 

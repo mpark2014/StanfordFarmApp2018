@@ -36,14 +36,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     @IBOutlet weak var statusTableView: UITableView!
     
     var ref: DatabaseReference!
-    var iFlagData:[String:Bool]! = [:]
-    var liveSensorDataKeys:[String] = []
-    var liveSensorData:[String:[String:Int]]! = [:]
-    var settings:[String:Int]! = [:]
-    var chartData:[Int]! = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     var scheduledIrrigationStartValue:Date? = Date()
-    var iQueueArray:[iQueueItem] = []
-    var iStatusDict:[String:[iQueueItem]]! = ["G1":[],"G2":[],"G3":[],"G4":[],"G5":[],"G6":[],"G7":[],"G8":[],"G9":[],"G10":[],"G11":[],"G12":[],"G13":[],"G14":[],"G15":[]]
     
     private var aaChartModel: AAChartModel?
     private var aaChartView: AAChartView?
@@ -72,13 +65,45 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         sensorsSamplingSettingsView.layer.cornerRadius = 4
         irrigationSamplingSettingsView.layer.cornerRadius = 4
         
-        firebaseGet_childAdded()
-        firebaseGet_childChanged()
+        setupCallbacks()
     }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         configureChart()
+    }
+    
+    func setupCallbacks() {
+        dataModel.dashboard_iFlag_Callback = {
+            DispatchQueue.main.async() {
+                self.irrigationCollectionView.reloadData()
+            }
+        }
+        
+        dataModel.dashboard_liveData_Callback = {
+            DispatchQueue.main.async() {
+                self.sensorsTableView.reloadData()
+                self.updateChartData()
+            }
+        }
+        
+        dataModel.dashboard_settings_Callback = {
+            DispatchQueue.main.async() {
+                self.configureSamplingSettings()
+            }
+        }
+        
+        dataModel.dashboard_iQueueList_Callback = {
+            DispatchQueue.main.async() {
+                self.irrigationQueueTableView.reloadData()
+            }
+        }
+        
+        dataModel.dashboard_iQueueBed_Callback = {
+            DispatchQueue.main.async() {
+                self.statusTableView.reloadData()
+            }
+        }
     }
     
     // MARK: - Chart Settings
@@ -101,7 +126,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             .series([
                 AASeriesElement()
                     .name("Sensor")
-                    .data(chartData)
+                    .data(dataModel.dashboard_chartData)
                     .toDic()!,
                 ])
         
@@ -110,7 +135,11 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     }
     
     func updateChartData() {
-        let series = [AASeriesElement().name("Sensor").data(chartData).toDic()!]
+        let series = [AASeriesElement()
+            .name("Sensor")
+            .data(dataModel.dashboard_chartData)
+            .toDic()!
+        ]
         aaChartView?.aa_onlyRefreshTheChartDataWithChartModelSeries(series)
     }
     
@@ -118,6 +147,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         aaChartModel = aaChartModel?
             .categories(["BED 1", "BED 2", "BED 3", "BED 4", "BED 5", "BED 6", "BED 7", "BED 8", "BED 9", "BED 10", "BED 11", "BED 12", "BED 13", "BED 14", "BED 15"])
             .legendEnabled(false)
+            .symbolStyle(AAChartSymbolStyleType.BorderBlank)
             .colorsTheme(["#fe117c","#ffc069","#06caf4","#7dffc0"])
             .animationType(AAChartAnimationType.Bounce)
             .animationDuration(500)
@@ -125,7 +155,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     }
     
     func configureSamplingSettings() {
-        if var iValue = self.settings["iInterval"] {
+        if var iValue = dataModel.dashboard_settings["iInterval"] {
             let hours = iValue/(60*60)
             iValue -= (hours*60*60)
             
@@ -137,7 +167,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             irrigationSamplingValue.text = "\(hours>9 ? "" : "0")\(hours):\(minutes>9 ? "" : "0")\(minutes):\(seconds>9 ? "" : "0")\(seconds)"
         }
         
-        if var sValue = self.settings["sInterval"] {
+        if var sValue = dataModel.dashboard_settings["sInterval"] {
             let hours = sValue/(60*60)
             sValue -= (hours*60*60)
             
@@ -149,213 +179,19 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             sensorsSamplingValue.text = "\(hours>9 ? "" : "0")\(hours):\(minutes>9 ? "" : "0")\(minutes):\(seconds>9 ? "" : "0")\(seconds)"
         }
         
-        if let iUValue = self.settings["iLastUpdated"] as? Int {
+        if let iUValue = dataModel.dashboard_settings["iLastUpdated"] as? Int {
             let date = Date(timeIntervalSince1970: (Double(iUValue/1000)))
             irrigationUpdatedLabel.text = "Last Updated: \(date.formatDate1())"
         }
         
-        if let sUValue = self.settings["sLastUpdated"] as? Int {
+        if let sUValue = dataModel.dashboard_settings["sLastUpdated"] as? Int {
             let date = Date(timeIntervalSince1970: (Double(sUValue/1000)))
             sensorsUpdatedLabel.text = "Last Updated: \(date.formatDate1())"
         }
     }
     
-    func firebaseGet_childAdded() {
-        // Firebase GET request
-        self.ref = Database.database().reference()
-        
-        ref.child("iFlag").observe(DataEventType.childAdded, with: { (snapshot) in
-            let key = snapshot.key
-            let item = ((snapshot.value as! Int) == 0) ? false : true
-            self.iFlagData[key] = item
-            
-            DispatchQueue.main.async() {
-                self.irrigationCollectionView.reloadData()
-            }
-        })
-        
-        ref.child("Live").observe(DataEventType.childAdded, with: { (snapshot) in
-            let key = snapshot.key
-            let bedNo = Int(String(key.dropFirst()))!
-            let value = (snapshot.value as! [String:[String:Int]])
-            
-            for (marker, item) in value {
-                let sensorNo = Int(String(marker.dropFirst(6)))!
-                
-                let liveDataKey = (bedNo<10) ? "0\(bedNo):\(sensorNo)" : "\(bedNo):\(sensorNo)"
-                self.liveSensorData[liveDataKey] = item
-                
-                if sensorNo == 1 {
-                    self.chartData[bedNo-1] = item["value"] as! Int
-                }
-            }
-            
-            // BAD CODE. CHANGE...
-            self.liveSensorDataKeys = Array(self.liveSensorData.keys)
-            self.liveSensorDataKeys.sort()
-            
-            DispatchQueue.main.async() {
-                self.sensorsTableView.reloadData()
-                self.updateChartData()
-            }
-        })
-        
-        ref.child("Settings").observe(DataEventType.childAdded, with: { (snapshot) in
-            let key = snapshot.key
-            let value = snapshot.value as! Int
-            self.settings[key] = value
-            
-            DispatchQueue.main.async() {
-                self.configureSamplingSettings()
-            }
-        })
-        
-        ref.child("iQueueList").queryOrdered(byChild: "start").observe(.childAdded) { (snapshot) in
-            let uuid = snapshot.key
-            let value = snapshot.value as! [String:Any]
-            let bed = value["bed"] as! Int
-            let bedString = value["blockBed"] as! String
-            let start = Date(timeIntervalSince1970: Double((value["start"] as! Int)/1000))
-            let end = Date(timeIntervalSince1970: Double((value["end"] as! Int)/1000))
-            let type = iQueueType(rawValue: value["type"] as! Int)!
-            let status = iQueueStatus(rawValue: value["status"] as! Int)!
-            let item = iQueueItem(uuid: uuid, bedNo: bed, bedString: bedString, start: start, end: end, type: type, status: status)
-            
-            if !self.iQueueArray.contains(item) {
-                insertSortedIQueueItem(array: &(self.iQueueArray), element: item)
-            } else {
-                let index = self.iQueueArray.index(of: item)
-                self.iQueueArray[index!] = item
-            }
-            
-            DispatchQueue.main.async() {
-                self.irrigationQueueTableView.reloadData()
-            }
-        }
-        
-        ref.child("iQueueBed").queryOrdered(byChild: "start").observe(.childAdded) { (snapshot) in
-            let bedString = snapshot.key
-            var iStatusArray = self.iStatusDict[bedString]!
-            let value = snapshot.value as! [String:[String:Any]]
-            
-            for (snapshotUuid, snapshotItem) in value {
-                let uuid = snapshotUuid
-                let start = Date(timeIntervalSince1970: Double((snapshotItem["start"] as! Int)/1000))
-                let end = Date(timeIntervalSince1970: Double((snapshotItem["end"] as! Int)/1000))
-                let now = Date()
-                let type = iQueueType(rawValue: snapshotItem["type"] as! Int)!
-                let status = iQueueStatus(rawValue: snapshotItem["status"] as! Int)!
-                let bed = snapshotItem["bed"] as! Int
-                let item = iQueueItem(uuid: uuid, bedNo: bed, bedString: bedString, start: start, end: end, type: type, status: status)
-                if !(iStatusArray.contains(item)) && now > start && now < end {
-                    insertSortedIQueueItem(array: &iStatusArray, element: item)
-                }
-            }
-            
-            self.iStatusDict[bedString] = iStatusArray
-            DispatchQueue.main.async() {
-                self.statusTableView.reloadData()
-            }
-        }
-    }
     
     
-    func firebaseGet_childChanged() {
-        ref.child("iFlag").observe(DataEventType.childChanged, with: { (snapshot) in
-            let key = snapshot.key
-            let item = ((snapshot.value as! Int) == 0) ? false : true
-            self.iFlagData[key] = item
-            
-            DispatchQueue.main.async() {
-                self.irrigationCollectionView.reloadData()
-            }
-        })
-        
-        ref.child("Live").observe(DataEventType.childChanged, with: { (snapshot) in
-            let key = snapshot.key
-            let bedNo = Int(String(key.dropFirst()))!
-            let value = (snapshot.value as! [String:[String:Int]])
-            
-            for (marker, item) in value {
-                let sensorNo = Int(String(marker.dropFirst(6)))!
-                
-                let liveDataKey = (bedNo<10) ? "0\(bedNo):\(sensorNo)" : "\(bedNo):\(sensorNo)"
-                self.liveSensorData[liveDataKey] = item
-                
-                if sensorNo == 1 {
-                    self.chartData[bedNo-1] = item["value"] as! Int
-                }
-            }
-            
-            // BAD CODE. CHANGE...
-            self.liveSensorDataKeys = Array(self.liveSensorData.keys)
-            self.liveSensorDataKeys.sort()
-            
-            DispatchQueue.main.async() {
-                self.sensorsTableView.reloadData()
-                self.updateChartData()
-            }
-        })
-        
-        ref.child("Settings").observe(DataEventType.childChanged, with: { (snapshot) in
-            let key = snapshot.key
-            let value = snapshot.value as! Int
-            self.settings[key] = value
-            
-            DispatchQueue.main.async() {
-                self.configureSamplingSettings()
-            }
-        })
-        
-        ref.child("iQueueList").queryOrdered(byChild: "start").observe(.childChanged) { (snapshot) in
-            let uuid = snapshot.key
-            let value = snapshot.value as! [String:Any]
-            let bed = value["bed"] as! Int
-            let bedString = value["blockBed"] as! String
-            let start = Date(timeIntervalSince1970: Double((value["start"] as! Int)/1000))
-            let end = Date(timeIntervalSince1970: Double((value["end"] as! Int)/1000))
-            let type = iQueueType(rawValue: value["type"] as! Int)!
-            let status = iQueueStatus(rawValue: value["status"] as! Int)!
-            let item = iQueueItem(uuid: uuid, bedNo: bed, bedString: bedString, start: start, end: end, type: type, status: status)
-            
-            if !self.iQueueArray.contains(item) {
-                insertSortedIQueueItem(array: &(self.iQueueArray), element: item)
-            } else {
-                let index = self.iQueueArray.index(of: item)
-                self.iQueueArray[index!] = item
-            }
-            
-            DispatchQueue.main.async() {
-                self.irrigationQueueTableView.reloadData()
-            }
-        }
-        
-        // REVIEW/FIX THIS
-        ref.child("iQueueBed").queryOrdered(byChild: "start").observe(.childChanged) { (snapshot) in
-            let bedString = snapshot.key
-            var iStatusArray = self.iStatusDict[bedString]!
-            let value = snapshot.value as! [String:[String:Any]]
-            
-            for (snapshotUuid, snapshotItem) in value {
-                let uuid = snapshotUuid
-                let start = Date(timeIntervalSince1970: Double((snapshotItem["start"] as! Int)/1000))
-                let end = Date(timeIntervalSince1970: Double((snapshotItem["end"] as! Int)/1000))
-                let now = Date()
-                let type = iQueueType(rawValue: snapshotItem["type"] as! Int)!
-                let status = iQueueStatus(rawValue: snapshotItem["status"] as! Int)!
-                let bed = snapshotItem["bed"] as! Int
-                let item = iQueueItem(uuid: uuid, bedNo: bed, bedString: bedString, start: start, end: end, type: type, status: status)
-                if !(iStatusArray.contains(item)) && now > start && now < end {
-                    insertSortedIQueueItem(array: &iStatusArray, element: item)
-                }
-            }
-            
-            self.iStatusDict[bedString] = iStatusArray
-            DispatchQueue.main.async() {
-                self.statusTableView.reloadData()
-            }
-        }
-    }
     
     // MARK: - Actions
     
@@ -394,7 +230,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "dashboardIrrigationCell", for: indexPath) as! DashboardIrrigationCollectionViewCell
             
             cell.mainTitle.text = "Bed " + String(indexPath.row+1)
-            cell.irrigationSwitch = self.iFlagData["G\(indexPath.row+1)"]
+            cell.irrigationSwitch = dataModel.dashboard_iFlagData["G\(indexPath.row+1)"]
             return cell
         case 1:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "dashScheduleIrrigationCell", for: indexPath) as! DashboardScheduleIrrigationCollectionViewCell
@@ -477,7 +313,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch collectionView.tag {
         case 0:
-            if let iSwitch = self.iFlagData["G\(indexPath.row+1)"] {
+            if let iSwitch = dataModel.dashboard_iFlagData["G\(indexPath.row+1)"] {
                 self.ref.child("iFlag/G\(indexPath.row+1)").setValue(!iSwitch)
             }
         default:
@@ -499,9 +335,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         switch collectionView.tag {
         case 0:
             var width = collectionView.frame.width
@@ -521,9 +355,9 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch tableView.tag {
         case 0:
-            return liveSensorData.count
+            return dataModel.dashboard_liveSensorData.count
         case 1:
-            return iQueueArray.count
+            return dataModel.dashboard_iQueueArray.count
         case 2:
             return 15
         default:
@@ -536,12 +370,12 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "sensorsTableViewCell")! as! DashboardSensorTableViewCell
             
-            let key = self.liveSensorDataKeys[indexPath.row]
+            let key = dataModel.dashboard_liveSensorDataKeys[indexPath.row]
             let sensorNo = key.dropFirst(3)
             let bedNo = key.dropLast(2)
             let dataStringified = "G\(bedNo) | Sensor \(sensorNo)"
             
-            let value = self.liveSensorData[key] as! [String:Int]
+            let value = dataModel.dashboard_liveSensorData[key] as! [String:Int]
             
             cell.isActive = (value["usage"] == 0) ? false : true
             cell.mainTitle.text = dataStringified
@@ -550,7 +384,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             return cell
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "irrigationQueueCell")! as! DashIrrigationQueueTableViewCell
-            let item = iQueueArray[indexPath.row]
+            let item = dataModel.dashboard_iQueueArray[indexPath.row]
             cell.bedLabel.text = "Bed \(item.bedNo) | "
             
             if item.status == iQueueStatus.complete {
@@ -570,7 +404,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             return cell
         case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: "dashStatusCell")! as! DashboardStatusTableViewCell
-            let array = iStatusDict["G\(indexPath.row+1)"]!
+            let array = dataModel.dashboard_iStatusDict["G\(indexPath.row+1)"]!
             cell.bedLabel.text = "G\(indexPath.row+1)"
             
             if array.isEmpty {
@@ -578,7 +412,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             } else {
                 let item = array[0]
                 cell.configureType(type: item.type, endTime: item.end.formatDate1())
-                print(iStatusDict["G\(indexPath.row+1)"])
+                print(dataModel.dashboard_iStatusDict["G\(indexPath.row+1)"])
             }
             return cell
         default:
@@ -588,12 +422,12 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     
     @IBAction func deleteiQueueItem(sender: UIButton) {
         print("Bed \(sender.tag+1) delete button clicked")
-        let item = self.iQueueArray[sender.tag]
+        let item = dataModel.dashboard_iQueueArray[sender.tag]
         if item.status == iQueueStatus.complete {
             self.ref.child("iQueueBed/\(item.bedString)/\(item.uuid)").removeValue()
             self.ref.child("iQueueList/\(item.uuid)").removeValue()
             let index = IndexPath(row: sender.tag, section: 0)
-            self.iQueueArray.remove(at: sender.tag)
+            dataModel.dashboard_iQueueArray.remove(at: sender.tag)
             self.irrigationQueueTableView.deleteRows(at: [index], with: .none)
             self.irrigationQueueTableView.reloadData()
         }

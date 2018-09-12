@@ -34,6 +34,33 @@ extension Date {
         dateFormatter.setLocalizedDateFormatFromTemplate("h:mm a")
         return dateFormatter.string(from: self)
     }
+    
+    func formatDate3() -> Int {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US")
+        
+        dateFormatter.dateFormat = "YY"
+        let year = dateFormatter.string(from: self)
+        
+        dateFormatter.dateFormat = "MM"
+        let month = dateFormatter.string(from: self)
+        
+        dateFormatter.dateFormat = "dd"
+        let day = dateFormatter.string(from: self)
+        
+        dateFormatter.dateFormat = "HH"
+        let hours = dateFormatter.string(from: self)
+        
+        dateFormatter.dateFormat = "mm"
+        let minutes = dateFormatter.string(from: self)
+        
+        dateFormatter.dateFormat = "ss"
+        let seconds = dateFormatter.string(from: self)
+        
+        let fullString = year + month + day + hours + minutes + seconds
+        
+        return Int(fullString)!
+    }
 }
 
 
