@@ -50,7 +50,7 @@ class DashboardScheduleIrrigationCollectionViewCell: UICollectionViewCell {
         startConfirmView.alpha = !hideEndConfirm ? 0 : 1
     }
     
-    @IBAction func startConfirmButtonTapped(_ sender: Any) {
+    func startConfirmButtonTappedConfigure() {
         var date = self.datePicker.date
         let timeInterval = floor(date.timeIntervalSince1970 / 60.0) * 60
         date = Date(timeIntervalSince1970: timeInterval)
@@ -71,7 +71,7 @@ class DashboardScheduleIrrigationCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    @IBAction func endConfirmOrDeleteTapped(_ sender: Any) {
+    func endConfirmOrDeleteTappedConfigure() {
         UIView.animate(withDuration: 0.2, animations: {
             self.endConfirmView.alpha = 0
             self.deleteView.alpha = 0

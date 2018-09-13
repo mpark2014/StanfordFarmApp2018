@@ -263,28 +263,35 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         let currentIndex = Int(self.scheduleIrrigationCollectionView.contentOffset.x / self.scheduleIrrigationCollectionView.frame.width)
         let currentIndexPath = IndexPath(item: currentIndex, section: 0)
         let currentCell = scheduleIrrigationCollectionView.cellForItem(at: currentIndexPath) as! DashboardScheduleIrrigationCollectionViewCell
-        
+
+        currentCell.startConfirmButtonTappedConfigure()
         var date = currentCell.datePicker.date
         let timeInterval = floor(date.timeIntervalSince1970 / 60.0) * 60
         date = Date(timeIntervalSince1970: timeInterval)
         scheduledIrrigationStartValue = date
     }
-    
+
     @IBAction func deleteConfirmButton(sender: UIButton) {
         print("Bed \(sender.tag+1) delete confirm clicked")
+        let currentIndex = Int(self.scheduleIrrigationCollectionView.contentOffset.x / self.scheduleIrrigationCollectionView.frame.width)
+        let currentIndexPath = IndexPath(item: currentIndex, section: 0)
+        let currentCell = scheduleIrrigationCollectionView.cellForItem(at: currentIndexPath) as! DashboardScheduleIrrigationCollectionViewCell
+
+        currentCell.endConfirmOrDeleteTappedConfigure()
         scheduledIrrigationStartValue = nil
     }
-    
+
     @IBAction func endConfirmButton(sender: UIButton) {
         print("Bed \(sender.tag+1) end confirm clicked")
         let currentIndex = Int(self.scheduleIrrigationCollectionView.contentOffset.x / self.scheduleIrrigationCollectionView.frame.width)
         let currentIndexPath = IndexPath(item: currentIndex, section: 0)
         let currentCell = scheduleIrrigationCollectionView.cellForItem(at: currentIndexPath) as! DashboardScheduleIrrigationCollectionViewCell
-        
+
+        currentCell.endConfirmOrDeleteTappedConfigure()
         var date = currentCell.datePicker.date
         let timeInterval = floor(date.timeIntervalSince1970 / 60.0) * 60
         date = Date(timeIntervalSince1970: timeInterval)
-        
+
         if date < Date() {
             // HANDLE ERROR
             print("ERROR1")

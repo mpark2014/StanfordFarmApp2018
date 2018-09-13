@@ -20,4 +20,18 @@ class BedScheduleIrrigationCollectionViewCell: UICollectionViewCell {
         outerView.layer.cornerRadius = 4.0
         outerView.layer.borderWidth = 1.0
     }
+    
+    func configure(on: Bool) {
+        if on {
+            outerView.layer.borderWidth = 0
+            outerView.backgroundColor = greenColor
+            dayLabel.textColor = UIColor.white
+            timeLabel.textColor = UIColor.white
+        } else {
+            outerView.layer.borderWidth = 1.0
+            outerView.backgroundColor = UIColor.white
+            dayLabel.textColor = UIColor.lightGray
+            timeLabel.textColor = UIColor.lightGray
+        }
+    }
 }

@@ -23,6 +23,7 @@ class DataModel {
     var dashboard_iQueueBed_Callback: (() -> ())?
     
     var bed_iFlag_Callback: (() -> ())?
+    var bed_iSchedule_Callback: (() -> ())?
     
     var dashboard_iFlagData:[String:Bool]! = [:]
     var dashboard_liveSensorDataKeys:[String] = []
@@ -31,6 +32,8 @@ class DataModel {
     var dashboard_settings:[String:Int]! = [:]
     var dashboard_iQueueArray:[iQueueItem] = []
     var dashboard_iStatusDict:[String:[iQueueItem]]! = ["G1":[],"G2":[],"G3":[],"G4":[],"G5":[],"G6":[],"G7":[],"G8":[],"G9":[],"G10":[],"G11":[],"G12":[],"G13":[],"G14":[],"G15":[]]
+    
+    var bed_iScheduleData:[String:[String:(String, String)]] = [:]
     
     var G1:[String:[[Int]]] = ["sensor1":[]]
     var G2:[String:[[Int]]] = ["sensor1":[]]
@@ -41,8 +44,9 @@ class DataModel {
     
     init() {
         ref = Database.database().reference()
-        firebaseGet_Dashboard()
-        firebaseGet_SensorData()
+        self.firebaseGet_Dashboard()
+        self.firebaseGet_SensorData()
+        self.firebaseGet_Bed()
     }
     
     // MARK: - Get Firebase Data
@@ -101,6 +105,15 @@ class DataModel {
         }
     }
     
+    func firebaseGet_Bed() {
+        ref.child("iSchedule").observe(DataEventType.childAdded, with: { (snapshot) in
+            self.parse_iScheduleData(snapshot: snapshot)
+        })
+        ref.child("iSchedule").observe(DataEventType.childChanged, with: { (snapshot) in
+            self.parse_iScheduleData(snapshot: snapshot)
+        })
+    }
+    
     // MARK: - Post Firebase Date
     
     func post_iFlag(bed: Int, iFlag: Bool) {
@@ -131,6 +144,23 @@ class DataModel {
         self.ref.child("iQueueBed/G\(bed)/\(uuid)").setValue(iQueueBedItem)
     }
     
+    func post_scheduledIrrigationTime(bed: Int, day: String, start: Date, end: Date) {
+        let calendar = Calendar.init(identifier: .gregorian)
+        let startHour = calendar.component(.hour, from: start)
+        let startMinute = calendar.component(.minute, from: start)
+        let endHour = calendar.component(.hour, from: end)
+        let endMinute = calendar.component(.minute, from: end)
+        
+        let iScheduleItem = [
+            "startHour": startHour,
+            "startMinute": startMinute,
+            "endHour": endHour,
+            "endMinute": endMinute
+        ] as [String:Any]
+        
+        self.ref.child("iSchedule/G\(bed)/\(day)").setValue(iScheduleItem)
+    }
+    
     func post_sensorSamplingRate(seconds: Int) {
         self.ref.child("Settings/sInterval").setValue(seconds)
     }
@@ -138,6 +168,8 @@ class DataModel {
     func post_irrigationSamplingRate(seconds: Int) {
         self.ref.child("Settings/iInterval").setValue(seconds)
     }
+    
+    // MARK: - Delete Firebase Data
     
     func delete_iQueueItem(bed: Int) {
         let item = self.dashboard_iQueueArray[bed-1]
@@ -147,6 +179,11 @@ class DataModel {
             self.ref.child("iQueueList/\(item.uuid)").removeValue()
             dataModel.dashboard_iQueueArray.remove(at: bed-1)
         }
+    }
+    
+    func delete_iScheduleItem(bed: Int, day: String) {
+        self.ref.child("iSchedule/G\(bed)/\(day)").removeValue()
+        dataModel.bed_iScheduleData["G\(bed)"]!.removeValue(forKey: day)
     }
     
     // MARK: - Firebase Parse Methods
@@ -231,5 +268,48 @@ class DataModel {
         }
         self.dashboard_iStatusDict[bedString] = iStatusArray
         self.dashboard_iQueueBed_Callback?()
+    }
+    
+    func parse_iScheduleData(snapshot: DataSnapshot) {
+        let bedString = snapshot.key
+        let value = snapshot.value as! [String:Any]
+        let dayKeys = value.keys
+        
+        for dayKey in dayKeys {
+            let iScheduleItem = value[dayKey] as! [String:Any]
+            var startHour = iScheduleItem["startHour"] as! Int
+            let startMinute = iScheduleItem["startMinute"] as! Int
+            var endHour = iScheduleItem["endHour"] as! Int
+            let endMinute = iScheduleItem["endMinute"] as! Int
+            var start_ampm = "AM"
+            var end_ampm = "AM"
+            
+            if startHour == 0 {
+                startHour = 12
+            } else if startHour > 12 {
+                startHour -= 12
+                start_ampm = "PM"
+            }
+            
+            if endHour == 0 {
+                endHour = 12
+            } else if endHour > 12 {
+                endHour -= 12
+                end_ampm = "PM"
+            }
+            
+            let startString = "\(startHour):" + (startMinute<10 ? "0\(startMinute)" : String(startMinute)) + " \(start_ampm)"
+            let endString = "\(endHour):" + (endMinute<10 ? "0\(endMinute)" : String(endMinute)) + " \(end_ampm)"
+            
+            let iScheduleItemTuple = (startString,endString)
+            
+            if self.bed_iScheduleData[bedString] == nil {
+                self.bed_iScheduleData[bedString] = [dayKey:iScheduleItemTuple]
+            } else {
+                self.bed_iScheduleData[bedString]![dayKey] = iScheduleItemTuple
+            }
+        }
+        
+        self.bed_iSchedule_Callback?()
     }
 }

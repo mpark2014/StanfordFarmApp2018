@@ -16,8 +16,12 @@ class ScheduleIrrigationModalViewController: UIViewController {
     @IBOutlet weak var confirmView: UIView!
     @IBOutlet weak var removeView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var startDatePicker: UIDatePicker!
+    @IBOutlet weak var endDatePicker: UIDatePicker!
     
-    var dayTitle: String?
+    var dayInt: Int?
+    var dayString = ""
+    var bedNo: Int?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,8 +32,29 @@ class ScheduleIrrigationModalViewController: UIViewController {
         removeView.layer.cornerRadius = 4.0
         cancelImageView.setImageColor(color: UIColor.white)
         
-        if let dayTitle = self.dayTitle {
-            titleLabel.text = "\(dayTitle) IRRIGATION"
+//        startDatePicker.date = Calendar(identifier: .gregorian).startOfDay(for: Date())
+//        endDatePicker.date = Calendar(identifier: .gregorian).startOfDay(for: Date())
+        
+        if let dayInt = self.dayInt {
+            switch dayInt {
+            case 0:
+                dayString = "MONDAY"
+            case 1:
+                dayString = "TUESDAY"
+            case 2:
+                dayString = "WEDNESDAY"
+            case 3:
+                dayString = "THURSDAY"
+            case 4:
+                dayString = "FRIDAY"
+            case 5:
+                dayString = "SATURDAY"
+            case 6:
+                dayString = "SUNDAY"
+            default:
+                dayString = ""
+            }
+            titleLabel.text = "\(dayString) IRRIGATION"
         }
     }
     
@@ -42,8 +67,24 @@ class ScheduleIrrigationModalViewController: UIViewController {
     }
     
     @IBAction func didTapConfirm(_ sender: Any) {
+        if let bedNo = self.bedNo {
+            if let _ = self.dayInt {
+                let start = startDatePicker.date
+                let end = endDatePicker.date
+                if start<end {
+                    dataModel.post_scheduledIrrigationTime(bed: bedNo, day: dayString, start: start, end: end)
+                    self.dismiss(animated: true, completion: nil)
+                }
+            }
+        }
     }
     
     @IBAction func didTapRemove(_ sender: Any) {
+        if let bedNo = self.bedNo {
+            if let _ = self.dayInt {
+                dataModel.delete_iScheduleItem(bed: bedNo, day: dayString)
+                self.dismiss(animated: true, completion: nil)
+            }
+        }
     }
 }
