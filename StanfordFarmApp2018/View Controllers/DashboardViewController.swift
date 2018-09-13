@@ -39,6 +39,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     
     private var aaChartModel: AAChartModel?
     private var aaChartView: AAChartView?
+    private var isSensorSamplingModal: Bool?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -189,9 +190,6 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         }
     }
     
-    
-    
-    
     // MARK: - Actions
     
     @IBAction func scheduleIrrigationRightTapped(_ sender: Any) {
@@ -208,6 +206,16 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             let currentIndexPath = IndexPath(item: currentIndex-1, section: 0)
             scheduleIrrigationCollectionView.scrollToItem(at: currentIndexPath, at: .centeredHorizontally, animated: true)
         }
+    }
+    
+    @IBAction func didTapSamplingSettings_irrigation(_ sender: Any) {
+        isSensorSamplingModal = false
+        performSegue(withIdentifier: "samplingSettingsSegue", sender: self)
+    }
+    
+    @IBAction func didTapSamplingSettings_sensors(_ sender: Any) {
+        isSensorSamplingModal = true
+        performSegue(withIdentifier: "samplingSettingsSegue", sender: self)
     }
     
     // MARK: - Collection View Methods
@@ -422,4 +430,12 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         }
     }
     
+    // MARK: - Navigation
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "samplingSettingsSegue" {
+            let destinationVC = segue.destination as! SamplingSettingsModalViewController
+            destinationVC.isSensorSampling = isSensorSamplingModal
+        }
+    }
 }

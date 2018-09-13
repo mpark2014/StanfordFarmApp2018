@@ -131,6 +131,14 @@ class DataModel {
         self.ref.child("iQueueBed/G\(bed)/\(uuid)").setValue(iQueueBedItem)
     }
     
+    func post_sensorSamplingRate(seconds: Int) {
+        self.ref.child("Settings/sInterval").setValue(seconds)
+    }
+    
+    func post_irrigationSamplingRate(seconds: Int) {
+        self.ref.child("Settings/iInterval").setValue(seconds)
+    }
+    
     func delete_iQueueItem(bed: Int) {
         let item = self.dashboard_iQueueArray[bed-1]
         
