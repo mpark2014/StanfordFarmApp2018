@@ -9,13 +9,14 @@
 /* Begin PBXBuildFile section */
 		125EBCA2FA010932AC9F2B0C /* Pods_StanfordFarmApp2018UITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 824F6307BCE061989B648679 /* Pods_StanfordFarmApp2018UITests.framework */; };
 		460454E32149A023009B4E0A /* BedScheduleIrrigationCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460454E22149A023009B4E0A /* BedScheduleIrrigationCollectionViewCell.swift */; };
+		460454E52149D9B8009B4E0A /* ScheduleIrrigationModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460454E42149D9B8009B4E0A /* ScheduleIrrigationModalViewController.swift */; };
 		4623F2592118D539005F1B15 /* MasterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4623F2582118D539005F1B15 /* MasterTableViewCell.swift */; };
 		4623F25B2118DA7E005F1B15 /* DashboardIrrigationCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4623F25A2118DA7E005F1B15 /* DashboardIrrigationCollectionViewCell.swift */; };
 		4623F25F2118DC69005F1B15 /* DashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4623F25E2118DC69005F1B15 /* DashboardViewController.swift */; };
 		4623F2612119022B005F1B15 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4623F2602119022B005F1B15 /* Tools.swift */; };
 		4633E1672119722B006DAF0D /* DashboardSensorTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4633E1662119722B006DAF0D /* DashboardSensorTableViewCell.swift */; };
 		4633E169211A7339006DAF0D /* DashboardScheduleIrrigationCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4633E168211A7338006DAF0D /* DashboardScheduleIrrigationCollectionViewCell.swift */; };
-		4635EFCB214860E300280E35 /* SensorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4635EFCA214860E300280E35 /* SensorData.swift */; };
+		4635EFCB214860E300280E35 /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4635EFCA214860E300280E35 /* DataModel.swift */; };
 		464C58E1211290060079487A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464C58E0211290060079487A /* AppDelegate.swift */; };
 		464C58E3211290060079487A /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464C58E2211290060079487A /* MasterViewController.swift */; };
 		464C58E8211290060079487A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 464C58E6211290060079487A /* Main.storyboard */; };
@@ -60,13 +61,14 @@
 		13E25B12F585B7FB10B6CD71 /* Pods_StanfordFarmApp2018.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StanfordFarmApp2018.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		22A1B9FC1C8F218D5ED5FEB6 /* Pods-StanfordFarmApp2018Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StanfordFarmApp2018Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-StanfordFarmApp2018Tests/Pods-StanfordFarmApp2018Tests.release.xcconfig"; sourceTree = "<group>"; };
 		460454E22149A023009B4E0A /* BedScheduleIrrigationCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BedScheduleIrrigationCollectionViewCell.swift; sourceTree = "<group>"; };
+		460454E42149D9B8009B4E0A /* ScheduleIrrigationModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleIrrigationModalViewController.swift; sourceTree = "<group>"; };
 		4623F2582118D539005F1B15 /* MasterTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterTableViewCell.swift; sourceTree = "<group>"; };
 		4623F25A2118DA7E005F1B15 /* DashboardIrrigationCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardIrrigationCollectionViewCell.swift; sourceTree = "<group>"; };
 		4623F25E2118DC69005F1B15 /* DashboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewController.swift; sourceTree = "<group>"; };
 		4623F2602119022B005F1B15 /* Tools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Tools.swift; path = StanfordFarmApp2018/Tools.swift; sourceTree = SOURCE_ROOT; };
 		4633E1662119722B006DAF0D /* DashboardSensorTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSensorTableViewCell.swift; sourceTree = "<group>"; };
 		4633E168211A7338006DAF0D /* DashboardScheduleIrrigationCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardScheduleIrrigationCollectionViewCell.swift; sourceTree = "<group>"; };
-		4635EFCA214860E300280E35 /* SensorData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorData.swift; sourceTree = "<group>"; };
+		4635EFCA214860E300280E35 /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 		464C58DD211290060079487A /* StanfordFarmApp2018.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StanfordFarmApp2018.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		464C58E0211290060079487A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		464C58E2211290060079487A /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
@@ -155,6 +157,7 @@
 				464C58E2211290060079487A /* MasterViewController.swift */,
 				4623F25E2118DC69005F1B15 /* DashboardViewController.swift */,
 				46BD13F2211B74E300E3A06C /* BedViewController.swift */,
+				460454E42149D9B8009B4E0A /* ScheduleIrrigationModalViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -241,7 +244,7 @@
 			isa = PBXGroup;
 			children = (
 				46BD13F4211D3CC700E3A06C /* iQueueItem.swift */,
-				4635EFCA214860E300280E35 /* SensorData.swift */,
+				4635EFCA214860E300280E35 /* DataModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -482,7 +485,7 @@
 				468FB67F211946CB004B9CBA /* AAChartModel.swift in Sources */,
 				4633E169211A7339006DAF0D /* DashboardScheduleIrrigationCollectionViewCell.swift in Sources */,
 				4633E1672119722B006DAF0D /* DashboardSensorTableViewCell.swift in Sources */,
-				4635EFCB214860E300280E35 /* SensorData.swift in Sources */,
+				4635EFCB214860E300280E35 /* DataModel.swift in Sources */,
 				468FB681211946CB004B9CBA /* AASeriesElement.swift in Sources */,
 				4623F25F2118DC69005F1B15 /* DashboardViewController.swift in Sources */,
 				4623F2612119022B005F1B15 /* Tools.swift in Sources */,
@@ -491,6 +494,7 @@
 				46BD13F8211D4B5500E3A06C /* DashIrrigationQueueTableViewCell.swift in Sources */,
 				4623F25B2118DA7E005F1B15 /* DashboardIrrigationCollectionViewCell.swift in Sources */,
 				460454E32149A023009B4E0A /* BedScheduleIrrigationCollectionViewCell.swift in Sources */,
+				460454E52149D9B8009B4E0A /* ScheduleIrrigationModalViewController.swift in Sources */,
 				464C58E3211290060079487A /* MasterViewController.swift in Sources */,
 				464C58E1211290060079487A /* AppDelegate.swift in Sources */,
 				46BD13FA211E34D100E3A06C /* DashboardStatusTableViewCell.swift in Sources */,

@@ -35,7 +35,6 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     @IBOutlet weak var scheduleIrrigationRightArrowButton: UIButton!
     @IBOutlet weak var statusTableView: UITableView!
     
-    var ref: DatabaseReference!
     var scheduledIrrigationStartValue:Date? = Date()
     
     private var aaChartModel: AAChartModel?
@@ -286,27 +285,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             print("ERROR2")
         } else {
             print(scheduledIrrigationStartValue!)
-            
-            let iQueueListItem = [
-                "bed": currentIndex+1,
-                "blockBed": "G\(currentIndex+1)",
-                "end": timeInterval*1000,
-                "start": scheduledIrrigationStartValue!.timeIntervalSince1970*1000,
-                "type": 1,
-                "status": 0
-                ] as [String:Any]
-            let reference = self.ref.child("iQueueList").childByAutoId()
-            reference.setValue(iQueueListItem)
-            let uuid = reference.key
-            
-            let iQueueBedItem = [
-                "end": timeInterval*1000,
-                "start": scheduledIrrigationStartValue!.timeIntervalSince1970*1000,
-                "bed": currentIndex+1,
-                "type": 1,
-                "status": 0
-                ] as [String:Any]
-            self.ref.child("iQueueBed/G\(currentIndex+1)/\(uuid)").setValue(iQueueBedItem)
+            dataModel.post_iQueueItem(bed: currentIndex+1, start: scheduledIrrigationStartValue!.timeIntervalSince1970*1000, end: timeInterval*1000, type: 1, status: 0)
         }
     }
     
@@ -314,7 +293,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         switch collectionView.tag {
         case 0:
             if let iSwitch = dataModel.dashboard_iFlagData["G\(indexPath.row+1)"] {
-                self.ref.child("iFlag/G\(indexPath.row+1)").setValue(!iSwitch)
+                dataModel.post_iFlag(bed: indexPath.row+1, iFlag: !iSwitch)
             }
         default:
             return
@@ -339,8 +318,10 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         switch collectionView.tag {
         case 0:
             var width = collectionView.frame.width
-            width = (width - (7*16))/6
-            return CGSize(width: width, height: collectionView.frame.height)
+            width = (width - (4*16))/5
+            var height = collectionView.frame.height
+            height = (height - (2*16))/3
+            return CGSize(width: width, height: height)
         case 1:
             var width = collectionView.frame.width
             width = width - (2*16)
@@ -422,15 +403,10 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     
     @IBAction func deleteiQueueItem(sender: UIButton) {
         print("Bed \(sender.tag+1) delete button clicked")
-        let item = dataModel.dashboard_iQueueArray[sender.tag]
-        if item.status == iQueueStatus.complete {
-            self.ref.child("iQueueBed/\(item.bedString)/\(item.uuid)").removeValue()
-            self.ref.child("iQueueList/\(item.uuid)").removeValue()
-            let index = IndexPath(row: sender.tag, section: 0)
-            dataModel.dashboard_iQueueArray.remove(at: sender.tag)
-            self.irrigationQueueTableView.deleteRows(at: [index], with: .none)
-            self.irrigationQueueTableView.reloadData()
-        }
+        dataModel.delete_iQueueItem(bed: sender.tag+1)
+//        let index = IndexPath(row: sender.tag, section: 0)
+//        self.irrigationQueueTableView.deleteRows(at: [index], with: .none)
+        self.irrigationQueueTableView.reloadData()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

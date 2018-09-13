@@ -8,7 +8,7 @@
 
 import UIKit
 
-class BedViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class BedViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var chartsView: UIView!
@@ -16,13 +16,16 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
     @IBOutlet weak var manualIrrigationControlView: UIView!
     @IBOutlet weak var manualIrrigationControlWidth: NSLayoutConstraint!
     @IBOutlet weak var manualIrrigationControlTitle: UILabel!
+    @IBOutlet weak var manualIrrigationControlStatus: UILabel!
     @IBOutlet weak var scheduleCollectionView: UICollectionView!
     @IBOutlet weak var scheduleIrrigationView: UIView!
     @IBOutlet weak var sensorsSelectionView: UIView!
+    @IBOutlet weak var sensorsSelectionTableView: UITableView!
     
     private var chartData: Array<Any> = []
     private var aaChartModel: AAChartModel?
     private var aaChartView: AAChartView?
+    var scheduleModal_dayString = ""
     
     var bedNo: Int? {
         didSet {
@@ -33,6 +36,8 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        sensorsSelectionTableView.delegate = self
+        sensorsSelectionTableView.dataSource = self
         scheduleCollectionView.delegate = self
         scheduleCollectionView.dataSource = self
         
@@ -44,6 +49,10 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
         dataModel.g1DownloadedCallback = {
             self.chartData = dataModel.G1["sensor1"]!
             self.updateChartData()
+        }
+        
+        dataModel.bed_iFlag_Callback = {
+            self.configure()
         }
     }
     
@@ -60,6 +69,23 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
         if let bedNo = self.bedNo {
             titleLabel.text = "Bed \(bedNo)"
             manualIrrigationControlTitle.text = "Bed \(bedNo)"
+            
+            if let iBool = dataModel.dashboard_iFlagData["G\(bedNo)"] {
+                manualIrrigationControlStatus.text = iBool ? "ON" : "OFF"
+                manualIrrigationControlStatus.textColor = iBool ? UIColor.white : UIColor.lightGray
+                manualIrrigationControlTitle.textColor = iBool ? UIColor.white : UIColor.lightGray
+                manualIrrigationControlView.backgroundColor = iBool ? greenColor : UIColor.white
+            }
+        }
+    }
+    
+    // MARK: - Actions
+    
+    @IBAction func irrigateBed(_ sender: Any) {
+        if let bedNo = self.bedNo {
+            if let iSwitch = dataModel.dashboard_iFlagData["G\(bedNo)"] {
+                dataModel.post_iFlag(bed: bedNo, iFlag: !iSwitch)
+            }
         }
     }
     
@@ -146,12 +172,55 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        // Schedule Irrigation for Day
+        switch indexPath.row {
+        case 0:
+            scheduleModal_dayString = "MONDAY"
+        case 1:
+            scheduleModal_dayString = "TUESDAY"
+        case 2:
+            scheduleModal_dayString = "WEDNESDAY"
+        case 3:
+            scheduleModal_dayString = "THURSDAY"
+        case 4:
+            scheduleModal_dayString = "FRIDAY"
+        case 5:
+            scheduleModal_dayString = "SATURDAY"
+        case 6:
+            scheduleModal_dayString = "SUNDAY"
+        default:
+            scheduleModal_dayString = ""
+        }
+        
+        performSegue(withIdentifier: "editScheduleSegue", sender: self)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         var width = collectionView.frame.width
         width = (width - (6*8))/7
         return CGSize(width: width, height: collectionView.frame.height)
+    }
+    
+    // MARK: - Table View Methods
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "sensorsSelectionTableViewCell")!
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return (tableView.frame.height/7)
+    }
+    
+    // MARK: - Navigation
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "editScheduleSegue" {
+            let destinationVC = segue.destination as! ScheduleIrrigationModalViewController
+            destinationVC.dayTitle = scheduleModal_dayString
+        }
     }
 }

@@ -14,12 +14,15 @@ let dataModel = DataModel()
 class DataModel {
     var ref: DatabaseReference!
     
-    var g1DownloadedCallback: (() -> (Void))?
-    var dashboard_iFlag_Callback: (() -> (Void))?
-    var dashboard_liveData_Callback: (() -> (Void))?
-    var dashboard_settings_Callback: (() -> (Void))?
-    var dashboard_iQueueList_Callback: (() -> (Void))?
-    var dashboard_iQueueBed_Callback: (() -> (Void))?
+    var g1DownloadedCallback: (() -> ())?
+    
+    var dashboard_iFlag_Callback: (() -> ())?
+    var dashboard_liveData_Callback: (() -> ())?
+    var dashboard_settings_Callback: (() -> ())?
+    var dashboard_iQueueList_Callback: (() -> ())?
+    var dashboard_iQueueBed_Callback: (() -> ())?
+    
+    var bed_iFlag_Callback: (() -> ())?
     
     var dashboard_iFlagData:[String:Bool]! = [:]
     var dashboard_liveSensorDataKeys:[String] = []
@@ -37,6 +40,7 @@ class DataModel {
     var G6:[String:[[Int]]] = ["sensor1":[]]
     
     init() {
+        ref = Database.database().reference()
         firebaseGet_Dashboard()
         firebaseGet_SensorData()
     }
@@ -44,8 +48,6 @@ class DataModel {
     // MARK: - Get Firebase Data
     
     func firebaseGet_SensorData() {
-        self.ref = Database.database().reference()
-        
         ref.child("Settings/Test/Database/G1/sensor1")
             .queryLimited(toLast: 10)
             .observe(DataEventType.childAdded, with: { (snapshot) in
@@ -63,9 +65,6 @@ class DataModel {
     }
     
     func firebaseGet_Dashboard() {
-        // Firebase GET request
-        self.ref = Database.database().reference()
-        
         ref.child("iFlag").observe(DataEventType.childAdded, with: { (snapshot) in
             self.parse_iFlagData(snapshot: snapshot)
         })
@@ -94,12 +93,51 @@ class DataModel {
             self.parse_iQueueList(snapshot: snapshot)
         }
         
-        // REVIEW/FIX THIS
         ref.child("iQueueBed").queryOrdered(byChild: "start").observe(DataEventType.childAdded) { (snapshot) in
             self.parse_iQueueBed(snapshot: snapshot)
         }
         ref.child("iQueueBed").queryOrdered(byChild: "start").observe(DataEventType.childChanged) { (snapshot) in
             self.parse_iQueueBed(snapshot: snapshot)
+        }
+    }
+    
+    // MARK: - Post Firebase Date
+    
+    func post_iFlag(bed: Int, iFlag: Bool) {
+        self.ref.child("iFlag/G\(bed)").setValue(iFlag)
+    }
+    
+    func post_iQueueItem(bed: Int, start: Double, end: Double, type: Int, status: Int) {
+        let iQueueListItem = [
+            "bed": bed,
+            "blockBed": "G\(bed)",
+            "end": end,
+            "start": start,
+            "type": type,
+            "status": status
+            ] as [String:Any]
+        
+        let iQueueBedItem = [
+            "end": end,
+            "start": start,
+            "bed": bed,
+            "type": type,
+            "status": status
+            ] as [String:Any]
+        
+        let reference = self.ref.child("iQueueList").childByAutoId()
+        reference.setValue(iQueueListItem)
+        let uuid = reference.key
+        self.ref.child("iQueueBed/G\(bed)/\(uuid)").setValue(iQueueBedItem)
+    }
+    
+    func delete_iQueueItem(bed: Int) {
+        let item = self.dashboard_iQueueArray[bed-1]
+        
+        if item.status == iQueueStatus.complete {
+            self.ref.child("iQueueBed/\(item.bedString)/\(item.uuid)").removeValue()
+            self.ref.child("iQueueList/\(item.uuid)").removeValue()
+            dataModel.dashboard_iQueueArray.remove(at: bed-1)
         }
     }
     
@@ -110,6 +148,7 @@ class DataModel {
         let item = ((snapshot.value as! Int) == 0) ? false : true
         self.dashboard_iFlagData[key] = item
         self.dashboard_iFlag_Callback?()
+        self.bed_iFlag_Callback?()
     }
     
     func parse_liveData(snapshot: DataSnapshot) {
@@ -163,6 +202,7 @@ class DataModel {
         self.dashboard_iQueueList_Callback?()
     }
     
+    // REVIEW/FIX THIS
     func parse_iQueueBed(snapshot: DataSnapshot) {
         let bedString = snapshot.key
         var iStatusArray = self.dashboard_iStatusDict[bedString]!
