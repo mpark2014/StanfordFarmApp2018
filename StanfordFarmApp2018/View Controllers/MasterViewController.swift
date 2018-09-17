@@ -28,32 +28,15 @@ class MasterViewController: UIViewController, UITableViewDelegate, UITableViewDa
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.mainTableView.delegate = self
-        self.mainTableView.dataSource = self
+        mainTableView.delegate = self
+        mainTableView.dataSource = self
         
         bedContainer.isHidden = true
-        
-        firebaseGet()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        self.mainTableView.selectRow(at: IndexPath(row: 0, section: 0), animated: true, scrollPosition: UITableViewScrollPosition.top)
-    }
-    
-    func firebaseGet() {
-        // Firebase GET request
-        self.ref = Database.database().reference()
-        
-        ref.child("Live").observe(DataEventType.childAdded, with: { (snapshot) in
-            let key = snapshot.key
-            let item = snapshot.value as! [String:AnyObject]
-            self.data[key] = item
-            
-            DispatchQueue.main.async() {
-                self.mainTableView.reloadData()
-            }
-        })
+        self.mainTableView.selectRow(at: IndexPath(row: 0, section: 0), animated: true, scrollPosition: UITableViewScrollPosition.top)
     }
 
     // MARK: - Segues
@@ -64,19 +47,6 @@ class MasterViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 self.bedViewController = bedViewController
             }
         }
-        
-//        if segue.identifier == "showDetail" {
-//            if let indexPath = tableView.indexPathForSelectedRow {
-//                print("segued")
-//                let title = masters[indexPath.row]
-//
-//                let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
-//
-//                controller.isBed = indexPath.row==0 ? false : true
-//                controller.detailItem = title
-//                controller.data = data
-//            }
-//        }
     }
 
     // MARK: - Table View
@@ -93,6 +63,11 @@ class MasterViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let cell = tableView.dequeueReusableCell(withIdentifier: "masterCell", for: indexPath) as! MasterTableViewCell
 
         let title = masters[indexPath.row]
+        
+        let bgView = UIView()
+        bgView.backgroundColor = UIColor.groupTableViewBackground
+        cell.selectedBackgroundView = bgView
+        cell.mainTitle!.highlightedTextColor = UIColor.lightGray
         cell.mainTitle!.text = title
         
         if indexPath.row == 0 {
@@ -101,7 +76,7 @@ class MasterViewController: UIViewController, UITableViewDelegate, UITableViewDa
             cell.mainImage.image = UIImage(named: "bed")
         }
         
-        cell.mainImage.setImageColor(color: UIColor.white)
+        cell.mainImage.setImageColor(color: UIColor.lightGray)
         return cell
     }
     
@@ -118,6 +93,10 @@ class MasterViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 switchContainers()
             }
         }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return (tableView.frame.height+1)/8
     }
     
     func switchContainers() {
