@@ -35,6 +35,7 @@
 		46BD13F5211D3CC700E3A06C /* iQueueItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46BD13F4211D3CC700E3A06C /* iQueueItem.swift */; };
 		46BD13F8211D4B5500E3A06C /* DashIrrigationQueueTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46BD13F7211D4B5500E3A06C /* DashIrrigationQueueTableViewCell.swift */; };
 		46BD13FA211E34D100E3A06C /* DashboardStatusTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46BD13F9211E34D100E3A06C /* DashboardStatusTableViewCell.swift */; };
+		46C35A2121503A870010D07E /* BedSensorsSelectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C35A2021503A870010D07E /* BedSensorsSelectionTableViewCell.swift */; };
 		4A466CF1433173F82F5F4AF4 /* Pods_StanfordFarmApp2018Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 632BBC12251AABFB39E4B460 /* Pods_StanfordFarmApp2018Tests.framework */; };
 		94466443FDA7255A94EF6E7D /* Pods_StanfordFarmApp2018.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13E25B12F585B7FB10B6CD71 /* Pods_StanfordFarmApp2018.framework */; };
 /* End PBXBuildFile section */
@@ -94,6 +95,7 @@
 		46BD13F4211D3CC700E3A06C /* iQueueItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iQueueItem.swift; sourceTree = "<group>"; };
 		46BD13F7211D4B5500E3A06C /* DashIrrigationQueueTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashIrrigationQueueTableViewCell.swift; sourceTree = "<group>"; };
 		46BD13F9211E34D100E3A06C /* DashboardStatusTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardStatusTableViewCell.swift; sourceTree = "<group>"; };
+		46C35A2021503A870010D07E /* BedSensorsSelectionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BedSensorsSelectionTableViewCell.swift; sourceTree = "<group>"; };
 		632BBC12251AABFB39E4B460 /* Pods_StanfordFarmApp2018Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StanfordFarmApp2018Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		824F6307BCE061989B648679 /* Pods_StanfordFarmApp2018UITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StanfordFarmApp2018UITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC0EA103351F71671A9F44BB /* Pods-StanfordFarmApp2018.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StanfordFarmApp2018.release.xcconfig"; path = "Pods/Target Support Files/Pods-StanfordFarmApp2018/Pods-StanfordFarmApp2018.release.xcconfig"; sourceTree = "<group>"; };
@@ -149,6 +151,7 @@
 				46BD13F7211D4B5500E3A06C /* DashIrrigationQueueTableViewCell.swift */,
 				46BD13F9211E34D100E3A06C /* DashboardStatusTableViewCell.swift */,
 				460454E22149A023009B4E0A /* BedScheduleIrrigationCollectionViewCell.swift */,
+				46C35A2021503A870010D07E /* BedSensorsSelectionTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -503,6 +506,7 @@
 				464C58E1211290060079487A /* AppDelegate.swift in Sources */,
 				46BD13FA211E34D100E3A06C /* DashboardStatusTableViewCell.swift in Sources */,
 				468FB680211946CB004B9CBA /* AASerializable.swift in Sources */,
+				46C35A2121503A870010D07E /* BedSensorsSelectionTableViewCell.swift in Sources */,
 				46BD13F3211B74E300E3A06C /* BedViewController.swift in Sources */,
 				4623F2592118D539005F1B15 /* MasterTableViewCell.swift in Sources */,
 			);

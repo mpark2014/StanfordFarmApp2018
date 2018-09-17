@@ -33,6 +33,7 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
     private var chartData: Array<Any> = []
     private var aaChartModel: AAChartModel?
     private var aaChartView: AAChartView?
+    private var numberOfSensors = 0
     var scheduleModal_dayInt = -1
     
     var scheduledIrrigationStartValue:Date? = Date()
@@ -71,9 +72,8 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
         deleteView.layer.cornerRadius = 4.0
         confirmEndTimeView.layer.cornerRadius = 4.0
         
-        dataModel.g1DownloadedCallback = {
-            self.chartData = dataModel.G1["sensor1"]!
-            self.updateChartData()
+        dataModel.bed_sensorDataDownloadedCallback = {
+            self.processSensorData(chartIsEmpty: self.chartData.isEmpty)
         }
         
         dataModel.bed_iFlag_Callback = {
@@ -98,14 +98,15 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
         
         manualIrrigationControlWidth.constant = ((self.view.frame.width - (16.0*7.0)) / 6.0)
         self.view.layoutIfNeeded()
-        
-        configureChart()
     }
     
     func configure() {
         if let bedNo = self.bedNo {
+            self.aaChartView?.removeFromSuperview()
+            numberOfSensors = 0
             titleLabel.text = "Bed \(bedNo)"
             manualIrrigationControlTitle.text = "Bed \(bedNo)"
+            dataModel.firebaseGet_SensorData(forBed: bedNo)
             
             if let iBool = dataModel.dashboard_iFlagData["G\(bedNo)"] {
                 manualIrrigationControlStatus.text = iBool ? "ON" : "OFF"
@@ -122,6 +123,31 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
         }
     }
     
+    // MARK: - Firebase Parsing
+    
+    func processSensorData(chartIsEmpty: Bool) {
+        if let bedNo = self.bedNo {
+            if let sensorData = dataModel.bed_sensorDataDict["G\(bedNo)"] {
+                var series: [[String:Any]] = []
+                
+                for sensor in sensorData.keys {
+                    let element = AASeriesElement()
+                        .name(sensor)
+                        .data(sensorData[sensor]!)
+                        .toDic()!
+                    series.append(element)
+                }
+                
+                self.numberOfSensors = series.count
+                DispatchQueue.main.async {
+                    self.sensorsSelectionTableView.reloadData()
+                }
+                
+                chartIsEmpty ? self.configureChart(series: series) : self.updateChartData(series: series)
+            }
+        }
+    }
+    
     // MARK: - Actions
     
     @IBAction func irrigateBed(_ sender: Any) {
@@ -134,7 +160,7 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
     
     // MARK: - Chart Settings
     
-    func configureChart() {
+    func configureChart(series: [[String:Any]]) {
         aaChartView = AAChartView()
         aaChartView?.frame = self.chartView.frame
         self.chartsView.addSubview(aaChartView!)
@@ -153,30 +179,17 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
             .legendEnabled(false)
             .animationType(AAChartAnimationType.Bounce)
             .animationDuration(500)
-            .series([
-                AASeriesElement()
-                    .name("Sensor 1")
-                    .zIndex(1)
-                    .marker([
-                        "fillColor":"#fe117c" ,
-                        "lineWidth": 2,
-                        "lineColor":"white"
-                        ])
-                    .data(self.chartData)
-                    .toDic()!,
-                ])
+            .series(series)
         
-        aaChartView?.aa_drawChartWithChartModel(aaChartModel!)
+        DispatchQueue.main.async {
+            self.aaChartView?.aa_drawChartWithChartModel(self.aaChartModel!)
+        }
     }
     
-    func updateChartData() {
-        let series = [AASeriesElement()
-            .name("Sensor 1")
-            .data(self.chartData)
-            .toDic()!
-        ]
-        
-        aaChartView?.aa_onlyRefreshTheChartDataWithChartModelSeries(series)
+    func updateChartData(series: [[String:Any]]) {
+        DispatchQueue.main.async {
+            self.aaChartView?.aa_onlyRefreshTheChartDataWithChartModelSeries(series)
+        }
     }
     
     // MARK: - Collection View Methods
@@ -242,7 +255,7 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if tableView == self.sensorsSelectionTableView {
-            return 1
+            return numberOfSensors
         } else if tableView == self.irrigationQueueTableView {
             if let bedNo = self.bedNo {
                 if let iArray = dataModel.bed_iQueueDict["G\(bedNo)"] {
@@ -257,13 +270,16 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if tableView == self.sensorsSelectionTableView {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "sensorsSelectionTableViewCell")!
+            let cell = tableView.dequeueReusableCell(withIdentifier: "sensorsSelectionTableViewCell") as! BedSensorsSelectionTableViewCell
+            cell.selectionStyle = .none
+            cell.titleLabel.text = "SENSOR \(indexPath.row+1)"
             return cell
         } else if tableView == self.irrigationQueueTableView {
             let cell = tableView.dequeueReusableCell(withIdentifier: "irrigationQueueCell") as! DashIrrigationQueueTableViewCell
             
             let item = dataModel.bed_iQueueDict["G\(bedNo!)"]![indexPath.row]
             cell.bedLabel.text = "Bed \(bedNo!) | "
+            cell.selectionStyle = .none
             if item.status == iQueueStatus.complete {
                 cell.configureComplete()
                 cell.deleteButton.tag = indexPath.row

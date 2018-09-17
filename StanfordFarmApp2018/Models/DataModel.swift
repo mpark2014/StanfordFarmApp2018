@@ -14,8 +14,7 @@ let dataModel = DataModel()
 class DataModel {
     var ref: DatabaseReference!
     
-    var g1DownloadedCallback: (() -> ())?
-    
+    // Callbacks
     var dashboard_iFlag_Callback: (() -> ())?
     var dashboard_liveData_Callback: (() -> ())?
     var dashboard_settings_Callback: (() -> ())?
@@ -25,7 +24,9 @@ class DataModel {
     var bed_iFlag_Callback: (() -> ())?
     var bed_iSchedule_Callback: (() -> ())?
     var bed_iQueueBed_Callback: (() -> ())?
+    var bed_sensorDataDownloadedCallback: (() -> ())?
     
+    // Data Stores
     var dashboard_iFlagData:[String:Bool]! = [:]
     var dashboard_liveSensorDataKeys:[String] = []
     var dashboard_liveSensorData:[String:[String:Int]]! = [:]
@@ -36,39 +37,22 @@ class DataModel {
     
     var bed_iQueueDict:[String:[iQueueItem]]! = ["G1":[],"G2":[],"G3":[],"G4":[],"G5":[],"G6":[],"G7":[],"G8":[],"G9":[],"G10":[],"G11":[],"G12":[],"G13":[],"G14":[],"G15":[]]
     var bed_iScheduleData:[String:[String:(String, String)]] = [:]
+    var bed_sensorDataDict:[String:[String:[[Int]]]] = [:]
     
-    var G1:[String:[[Int]]] = ["sensor1":[]]
-    var G2:[String:[[Int]]] = ["sensor1":[]]
-    var G3:[String:[[Int]]] = ["sensor1":[]]
-    var G4:[String:[[Int]]] = ["sensor1":[]]
-    var G5:[String:[[Int]]] = ["sensor1":[]]
-    var G6:[String:[[Int]]] = ["sensor1":[]]
+//    var G1:[String:[[Int]]] = ["sensor1":[]]
+//    var G2:[String:[[Int]]] = ["sensor1":[]]
+//    var G3:[String:[[Int]]] = ["sensor1":[]]
+//    var G4:[String:[[Int]]] = ["sensor1":[]]
+//    var G5:[String:[[Int]]] = ["sensor1":[]]
+//    var G6:[String:[[Int]]] = ["sensor1":[]]
     
     init() {
         ref = Database.database().reference()
         self.firebaseGet_Dashboard()
-        self.firebaseGet_SensorData()
         self.firebaseGet_Bed()
     }
     
     // MARK: - Get Firebase Data
-    
-    func firebaseGet_SensorData() {
-        ref.child("Settings/Test/Database/G1/sensor1")
-            .queryLimited(toLast: 10)
-            .observe(DataEventType.childAdded, with: { (snapshot) in
-                let item = snapshot.value! as! [String:Int]
-                
-                let timestamp = item["timestamp"]!
-                let date = Date(timeIntervalSince1970: (Double(timestamp)/1000))
-                let value = item["value"]!
-//                print(date.formatDate3())
-                let dataTuple = [date.formatDate3(), value]
-                self.G1["sensor1"]!.append(dataTuple)
-                
-                self.g1DownloadedCallback?()
-            })
-    }
     
     func firebaseGet_Dashboard() {
         ref.child("iFlag").observe(DataEventType.childAdded, with: { (snapshot) in
@@ -104,7 +88,9 @@ class DataModel {
             print("iQueueList: Child Removed")
             self.parse_iQueueListRemoved(snapshot: snapshot)
         }
-        
+    }
+    
+    func firebaseGet_Bed() {
         ref.child("iQueueBed").queryOrdered(byChild: "start").observe(DataEventType.childAdded) { (snapshot) in
             print("iQueueBed: Child Added")
             self.parse_iQueueBed(snapshot: snapshot)
@@ -117,9 +103,7 @@ class DataModel {
             print("iQueueBed: Child Removed")
             self.parse_iQueueBedRemove(snapshot: snapshot)
         }
-    }
-    
-    func firebaseGet_Bed() {
+        
         ref.child("iSchedule").observe(DataEventType.childAdded, with: { (snapshot) in
             self.parse_iScheduleData(snapshot: snapshot)
         })
@@ -128,7 +112,38 @@ class DataModel {
         })
     }
     
-    // MARK: - Post Firebase Date
+    func firebaseGet_SensorData(forBed: Int) {
+        if bed_sensorDataDict["G\(forBed)"] == nil {
+            var i = 1
+            var bedX_sensorData:[String:[[Int]]] = [:]
+            
+            while dashboard_liveSensorDataKeys.contains("\(((forBed<10) ? "0" : ""))\(forBed):\(i)") {
+                bedX_sensorData["sensor\(i)"] = []
+                i+=1
+            }
+            
+            for sensor in bedX_sensorData.keys {
+                ref.child("Settings/Test/Database/G\(forBed)/\(sensor)").queryLimited(toLast: 10).observe(DataEventType.childAdded, with: { (snapshot) in
+                    let item = snapshot.value! as! [String:Int]
+                    
+                    let timestamp = item["timestamp"]!
+                    let date = Date(timeIntervalSince1970: (Double(timestamp)/1000))
+                    let value = item["value"]!
+//                    print(date.formatDate3())
+                    let dataTuple = [date.formatDate3(), value]
+                    bedX_sensorData[sensor]!.append(dataTuple)
+                    
+                    self.bed_sensorDataDict["G\(forBed)"] = bedX_sensorData
+//                    print(self.bed_sensorDataDict)
+                    self.bed_sensorDataDownloadedCallback?()
+                })
+            }
+        } else {
+            self.bed_sensorDataDownloadedCallback?()
+        }
+    }
+    
+    // MARK: - Post to Firebase Database
     
     func post_iFlag(bed: Int, iFlag: Bool) {
         self.ref.child("iFlag/G\(bed)").setValue(iFlag)
@@ -186,10 +201,6 @@ class DataModel {
     // MARK: - Delete Firebase Data
     
     func delete_iQueueItem(bed: Int?, itemNo: Int) {
-//        print(self.bed_iQueueDict)
-//        print("G\(bed)")
-//        print(self.bed_iQueueDict["G\(bed)"])
-//        print(self.bed_iQueueDict["G\(bed)"]?[itemNo])
         let item = (bed==nil) ? self.dashboard_iQueueArray[itemNo] : self.bed_iQueueDict["G\(bed!)"]![itemNo]
         
         if item.status == iQueueStatus.complete {
@@ -204,6 +215,10 @@ class DataModel {
     func delete_iScheduleItem(bed: Int, day: String) {
         self.ref.child("iSchedule/G\(bed)/\(day)").removeValue()
         dataModel.bed_iScheduleData["G\(bed)"]!.removeValue(forKey: day)
+    }
+    
+    func delete_codeDirectedItem(path: String) {
+        self.ref.child(path).removeValue()
     }
     
     // MARK: - Firebase Parse Methods
@@ -223,7 +238,6 @@ class DataModel {
         
         for (marker, item) in value {
             let sensorNo = Int(String(marker.dropFirst(6)))!
-            
             let liveDataKey = (bedNo<10) ? "0\(bedNo):\(sensorNo)" : "\(bedNo):\(sensorNo)"
             self.dashboard_liveSensorData[liveDataKey] = item
             
@@ -247,7 +261,6 @@ class DataModel {
     }
     
     func parse_iQueueList(snapshot: DataSnapshot) {
-//        print(snapshot)
         let uuid = snapshot.key
         let value = snapshot.value as! [String:Any]
         let bed = value["bed"] as! Int

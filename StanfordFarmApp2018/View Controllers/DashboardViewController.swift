@@ -375,6 +375,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             
             let value = dataModel.dashboard_liveSensorData[key] as! [String:Int]
             
+            cell.selectionStyle = .none
             cell.isActive = (value["usage"] == 0) ? false : true
             cell.mainTitle.text = dataStringified
             cell.valueLabel.text = String(value["value"]!)
@@ -384,6 +385,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             let cell = tableView.dequeueReusableCell(withIdentifier: "irrigationQueueCell")! as! DashIrrigationQueueTableViewCell
             let item = dataModel.dashboard_iQueueArray[indexPath.row]
             cell.bedLabel.text = "Bed \(item.bedNo) | "
+            cell.selectionStyle = .none
             
             if item.status == iQueueStatus.complete {
                 cell.configureComplete()
@@ -404,6 +406,7 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             let cell = tableView.dequeueReusableCell(withIdentifier: "dashStatusCell")! as! DashboardStatusTableViewCell
             let array = dataModel.dashboard_iStatusDict["G\(indexPath.row+1)"]!
             cell.bedLabel.text = "G\(indexPath.row+1)"
+            cell.selectionStyle = .none
             
             if array.isEmpty {
                 cell.configureNone()
