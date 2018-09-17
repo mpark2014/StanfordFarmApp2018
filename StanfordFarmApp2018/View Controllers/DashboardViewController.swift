@@ -55,6 +55,8 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         statusTableView.delegate = self
         statusTableView.dataSource = self
         
+        irrigationQueueTableView.rowHeight = (irrigationQueueTableView.frame.height+1)/6
+        
         sensorsView.layer.cornerRadius = 4
         samplingSettingsView.layer.cornerRadius = 4
         waterConsumptionVIew.layer.cornerRadius = 4
@@ -408,20 +410,11 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             } else {
                 let item = array[0]
                 cell.configureType(type: item.type, endTime: item.end.formatDate1())
-                print(dataModel.dashboard_iStatusDict["G\(indexPath.row+1)"])
             }
             return cell
         default:
             return UITableViewCell()
         }
-    }
-    
-    @IBAction func deleteiQueueItem(sender: UIButton) {
-        print("Bed \(sender.tag+1) delete button clicked")
-        dataModel.delete_iQueueItem(bed: sender.tag+1)
-//        let index = IndexPath(row: sender.tag, section: 0)
-//        self.irrigationQueueTableView.deleteRows(at: [index], with: .none)
-        self.irrigationQueueTableView.reloadData()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -435,6 +428,12 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         default:
             return 0
         }
+    }
+    
+    @IBAction func deleteiQueueItem(sender: UIButton) {
+        print("\(sender.tag+1) delete button clicked")
+        dataModel.delete_iQueueItem(bed: nil, itemNo: sender.tag)
+        self.irrigationQueueTableView.reloadData()
     }
     
     // MARK: - Navigation

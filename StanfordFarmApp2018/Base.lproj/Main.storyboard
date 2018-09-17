@@ -486,16 +486,16 @@
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <tableView clipsSubviews="YES" tag="1" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" allowsSelection="NO" rowHeight="40" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="OPe-OF-rp7">
+                                                            <tableView clipsSubviews="YES" tag="1" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" allowsSelection="NO" rowHeight="46" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="OPe-OF-rp7">
                                                                 <rect key="frame" x="16" y="42" width="422" height="278"/>
                                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="16" maxY="0.0"/>
                                                                 <prototypes>
                                                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="irrigationQueueCell" id="T7a-x1-Hzc" customClass="DashIrrigationQueueTableViewCell" customModule="StanfordFarmApp2018" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="28" width="422" height="40"/>
+                                                                        <rect key="frame" x="0.0" y="28" width="422" height="46"/>
                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="T7a-x1-Hzc" id="aAB-fO-djb">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="422" height="39.5"/>
+                                                                            <rect key="frame" x="0.0" y="0.0" width="422" height="45.5"/>
                                                                             <autoresizingMask key="autoresizingMask"/>
                                                                             <subviews>
                                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bed 1 | " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tll-Gf-HUM">
@@ -1122,7 +1122,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="924" height="1500"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kSU-Uw-R3X">
-                                        <rect key="frame" x="0.0" y="0.0" width="924" height="975.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="924" height="1000.5"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tcn-Nj-eTm">
                                                 <rect key="frame" x="758" y="16" width="150" height="100"/>
@@ -1200,16 +1200,16 @@
                                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OgZ-tl-KoA">
                                                 <rect key="frame" x="758" y="132" width="150" height="334"/>
                                                 <subviews>
-                                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="nAn-I9-ay3">
+                                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" rowHeight="47" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="nAn-I9-ay3">
                                                         <rect key="frame" x="0.0" y="0.0" width="150" height="334"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                         <prototypes>
                                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="sensorsSelectionTableViewCell" id="TiJ-hA-ifR">
-                                                                <rect key="frame" x="0.0" y="28" width="150" height="44"/>
+                                                                <rect key="frame" x="0.0" y="28" width="150" height="47"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="TiJ-hA-ifR" id="g3C-kF-cPH">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="150" height="43.5"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="150" height="46.5"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <subviews>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SENSOR 1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G3j-H9-BWb">
@@ -1330,23 +1330,23 @@
                                                 </constraints>
                                             </view>
                                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4J7-9C-41d">
-                                                <rect key="frame" x="16" y="696" width="438" height="263.5"/>
+                                                <rect key="frame" x="16" y="696" width="438" height="288.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Irrigation Queue" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EHQ-ob-Yqk">
                                                         <rect key="frame" x="16" y="16" width="140" height="22"/>
                                                         <fontDescription key="fontDescription" name="Charter-Bold" family="Charter" pointSize="18"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <tableView clipsSubviews="YES" tag="1" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" allowsSelection="NO" rowHeight="40" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="jqI-2T-rAX">
-                                                        <rect key="frame" x="16" y="42" width="422" height="221"/>
+                                                    <tableView clipsSubviews="YES" tag="1" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" allowsSelection="NO" rowHeight="49" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="jqI-2T-rAX">
+                                                        <rect key="frame" x="16" y="42" width="422" height="246"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="16" maxY="0.0"/>
                                                         <prototypes>
                                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="irrigationQueueCell" id="Klj-mG-qHn" customClass="DashIrrigationQueueTableViewCell" customModule="StanfordFarmApp2018" customModuleProvider="target">
-                                                                <rect key="frame" x="0.0" y="28" width="422" height="40"/>
+                                                                <rect key="frame" x="0.0" y="28" width="422" height="49"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Klj-mG-qHn" id="CZC-zD-mkF">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="422" height="39.5"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="422" height="48.5"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <subviews>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bed 1 | " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Ps-Jn-cEc">
@@ -1406,15 +1406,15 @@
                                                 </constraints>
                                             </view>
                                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PTM-EP-M7o">
-                                                <rect key="frame" x="470" y="696" width="438" height="263.5"/>
+                                                <rect key="frame" x="470" y="696" width="438" height="288.5"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XBA-4A-eKH">
-                                                        <rect key="frame" x="16" y="16" width="406" height="231.5"/>
+                                                        <rect key="frame" x="16" y="16" width="406" height="256.5"/>
                                                         <subviews>
                                                             <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="5" translatesAutoresizingMaskIntoConstraints="NO" id="lOv-xc-tRz">
-                                                                <rect key="frame" x="0.0" y="38.5" width="406" height="150"/>
+                                                                <rect key="frame" x="0.0" y="38.5" width="406" height="175"/>
                                                                 <constraints>
-                                                                    <constraint firstAttribute="height" constant="150" id="NFZ-vu-zHQ"/>
+                                                                    <constraint firstAttribute="height" constant="175" id="NFZ-vu-zHQ"/>
                                                                 </constraints>
                                                                 <date key="date" timeIntervalSinceReferenceDate="555398276.22071695">
                                                                     <!--2018-08-08 05:17:56 +0000-->
@@ -1433,7 +1433,7 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <view autoresizesSubviews="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6zz-1t-RNv">
-                                                                <rect key="frame" x="0.0" y="188.5" width="406" height="43"/>
+                                                                <rect key="frame" x="0.0" y="213.5" width="406" height="43"/>
                                                                 <subviews>
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EeI-Ja-FFv">
                                                                         <rect key="frame" x="0.0" y="0.0" width="406" height="43"/>
@@ -1446,6 +1446,9 @@
                                                                             </label>
                                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nI3-hg-AZw">
                                                                                 <rect key="frame" x="0.0" y="-0.5" width="406" height="43"/>
+                                                                                <connections>
+                                                                                    <action selector="didTapConfirmStartTime:" destination="R8Q-rC-Tip" eventType="touchUpInside" id="a1t-Qb-pba"/>
+                                                                                </connections>
                                                                             </button>
                                                                         </subviews>
                                                                         <color key="backgroundColor" red="0.54901960780000003" green="0.08235294118" blue="0.08235294118" alpha="1" colorSpace="calibratedRGB"/>
@@ -1469,6 +1472,9 @@
                                                                             </imageView>
                                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O57-jM-59b">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="43" height="43"/>
+                                                                                <connections>
+                                                                                    <action selector="didTapDelete:" destination="R8Q-rC-Tip" eventType="touchUpInside" id="LQK-YI-zYC"/>
+                                                                                </connections>
                                                                             </button>
                                                                         </subviews>
                                                                         <color key="backgroundColor" red="0.54901960780000003" green="0.08235294118" blue="0.08235294118" alpha="1" colorSpace="calibratedRGB"/>
@@ -1485,16 +1491,19 @@
                                                                         </constraints>
                                                                     </view>
                                                                     <view autoresizesSubviews="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="89p-ml-LH1">
-                                                                        <rect key="frame" x="43" y="0.0" width="363" height="43"/>
+                                                                        <rect key="frame" x="59" y="0.0" width="347" height="43"/>
                                                                         <subviews>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CONFIRM END TIME" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k2A-le-YYx">
-                                                                                <rect key="frame" x="67.5" y="6" width="229" height="31.5"/>
+                                                                                <rect key="frame" x="59" y="6" width="229" height="31.5"/>
                                                                                 <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="23"/>
                                                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                 <nil key="highlightedColor"/>
                                                                             </label>
                                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sIG-wE-GWD">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="363" height="43"/>
+                                                                                <rect key="frame" x="0.0" y="0.0" width="347" height="43"/>
+                                                                                <connections>
+                                                                                    <action selector="didTapConfirmEndTime:" destination="R8Q-rC-Tip" eventType="touchUpInside" id="Aef-mm-IeY"/>
+                                                                                </connections>
                                                                             </button>
                                                                         </subviews>
                                                                         <color key="backgroundColor" red="0.65490196079999996" green="0.83529411760000005" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -1514,7 +1523,6 @@
                                                                     <constraint firstAttribute="bottom" secondItem="89p-ml-LH1" secondAttribute="bottom" id="BTY-OS-0l0"/>
                                                                     <constraint firstAttribute="trailing" secondItem="EeI-Ja-FFv" secondAttribute="trailing" id="Gh1-GM-geL"/>
                                                                     <constraint firstAttribute="trailing" secondItem="89p-ml-LH1" secondAttribute="trailing" id="JUg-9n-EMQ"/>
-                                                                    <constraint firstItem="89p-ml-LH1" firstAttribute="leading" secondItem="1Iw-lj-0ix" secondAttribute="trailing" id="Khe-Bf-A8g"/>
                                                                     <constraint firstAttribute="bottom" secondItem="1Iw-lj-0ix" secondAttribute="bottom" id="MIB-vd-lEy"/>
                                                                     <constraint firstAttribute="bottom" secondItem="EeI-Ja-FFv" secondAttribute="bottom" id="SxV-QF-Hh4"/>
                                                                     <constraint firstItem="EeI-Ja-FFv" firstAttribute="top" secondItem="6zz-1t-RNv" secondAttribute="top" id="Vdq-1m-N7W"/>
@@ -1597,6 +1605,10 @@
                     <connections>
                         <outlet property="chartView" destination="kAW-iL-hen" id="wjZ-z4-bXF"/>
                         <outlet property="chartsView" destination="ghC-Jt-MBh" id="Tfd-Br-fQV"/>
+                        <outlet property="confirmEndTimeView" destination="89p-ml-LH1" id="h1i-As-Ck0"/>
+                        <outlet property="confirmStartTimeView" destination="EeI-Ja-FFv" id="KNL-q5-IhE"/>
+                        <outlet property="deleteView" destination="1Iw-lj-0ix" id="Lq5-G0-EZy"/>
+                        <outlet property="irrigationQueueTableView" destination="jqI-2T-rAX" id="Omr-XZ-jOf"/>
                         <outlet property="irrigationQueueView" destination="4J7-9C-41d" id="pYE-fK-Jpm"/>
                         <outlet property="manualIrrigationControlStatus" destination="0dh-ry-h0V" id="ES5-6e-YtG"/>
                         <outlet property="manualIrrigationControlTitle" destination="hTe-TS-iG2" id="ptx-Bi-NdW"/>
@@ -1604,6 +1616,8 @@
                         <outlet property="manualIrrigationControlWidth" destination="xBE-Cm-PKi" id="IXC-I8-5mP"/>
                         <outlet property="scheduleCollectionView" destination="yb4-8u-pYt" id="wSN-J7-dzR"/>
                         <outlet property="scheduleIrrigationView" destination="bsW-Pl-U1Y" id="BgM-b5-26G"/>
+                        <outlet property="scheduleSingleIrrigationDatePicker" destination="lOv-xc-tRz" id="tsS-7Z-Ki7"/>
+                        <outlet property="scheduleSingleIrrigationLabel" destination="plR-KR-t5S" id="hQ1-3g-rs3"/>
                         <outlet property="scheduleSingleIrrigationView" destination="PTM-EP-M7o" id="uyi-s9-QNz"/>
                         <outlet property="sensorsSelectionTableView" destination="nAn-I9-ay3" id="a24-Li-ZVh"/>
                         <outlet property="sensorsSelectionView" destination="OgZ-tl-KoA" id="iog-5P-JVv"/>
@@ -1613,7 +1627,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fja-ds-9Q8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="471" y="-1625"/>
+            <point key="canvasLocation" x="470.50781249999994" y="-1625"/>
         </scene>
         <!--Schedule Irrigation Modal View Controller-->
         <scene sceneID="idJ-C9-Op3">
