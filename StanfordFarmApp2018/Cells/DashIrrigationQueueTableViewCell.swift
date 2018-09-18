@@ -14,6 +14,7 @@ class DashIrrigationQueueTableViewCell: UITableViewCell {
     @IBOutlet weak var detailLabel: UILabel!
     @IBOutlet weak var deleteButton: UIButton!
     @IBOutlet weak var deleteImage: UIImageView!
+    @IBOutlet weak var activityMonitor: UIActivityIndicatorView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -23,11 +24,15 @@ class DashIrrigationQueueTableViewCell: UITableViewCell {
     func configurePending() {
         deleteButton.isHidden = true
         deleteImage.isHidden = true
+        activityMonitor.isHidden = false
+        activityMonitor.startAnimating()
     }
     
     func configureComplete() {
         deleteButton.isHidden = false
         deleteImage.isHidden = false
+        activityMonitor.isHidden = true
+        activityMonitor.stopAnimating()
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

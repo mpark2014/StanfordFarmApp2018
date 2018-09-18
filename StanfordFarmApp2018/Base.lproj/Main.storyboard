@@ -530,11 +530,20 @@
                                                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MeL-0b-Aav">
                                                                                     <rect key="frame" x="360.5" y="0.0" width="61.5" height="45.5"/>
                                                                                 </button>
+                                                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Ooq-Sq-lVb">
+                                                                                    <rect key="frame" x="376.5" y="8" width="29.5" height="29.5"/>
+                                                                                    <constraints>
+                                                                                        <constraint firstAttribute="width" secondItem="Ooq-Sq-lVb" secondAttribute="height" multiplier="1:1" id="eEF-51-TIu"/>
+                                                                                    </constraints>
+                                                                                </activityIndicatorView>
                                                                             </subviews>
                                                                             <constraints>
                                                                                 <constraint firstItem="f2j-Wc-vcr" firstAttribute="top" secondItem="aAB-fO-djb" secondAttribute="top" constant="8" id="67v-p2-GJb"/>
                                                                                 <constraint firstAttribute="bottom" secondItem="MeL-0b-Aav" secondAttribute="bottom" id="LQT-aS-LsC"/>
                                                                                 <constraint firstItem="MeL-0b-Aav" firstAttribute="top" secondItem="aAB-fO-djb" secondAttribute="top" id="Lve-sp-j17"/>
+                                                                                <constraint firstItem="Ooq-Sq-lVb" firstAttribute="top" secondItem="aAB-fO-djb" secondAttribute="top" constant="8" id="Nz2-C6-QFx"/>
+                                                                                <constraint firstAttribute="trailing" secondItem="Ooq-Sq-lVb" secondAttribute="trailing" constant="16" id="ON3-g1-tna"/>
+                                                                                <constraint firstAttribute="bottom" secondItem="Ooq-Sq-lVb" secondAttribute="bottom" constant="8" id="TtX-hf-kaM"/>
                                                                                 <constraint firstAttribute="trailing" secondItem="MeL-0b-Aav" secondAttribute="trailing" id="Y73-Qi-Qu4"/>
                                                                                 <constraint firstItem="7nQ-W8-FYk" firstAttribute="leading" secondItem="tll-Gf-HUM" secondAttribute="trailing" id="Ygz-vx-uUh"/>
                                                                                 <constraint firstItem="tll-Gf-HUM" firstAttribute="centerY" secondItem="aAB-fO-djb" secondAttribute="centerY" id="Zid-Gw-s6H"/>
@@ -546,6 +555,7 @@
                                                                             </constraints>
                                                                         </tableViewCellContentView>
                                                                         <connections>
+                                                                            <outlet property="activityMonitor" destination="Ooq-Sq-lVb" id="iVM-uD-79A"/>
                                                                             <outlet property="bedLabel" destination="tll-Gf-HUM" id="kzN-OJ-i1T"/>
                                                                             <outlet property="deleteButton" destination="MeL-0b-Aav" id="kR2-L3-yPR"/>
                                                                             <outlet property="deleteImage" destination="f2j-Wc-vcr" id="nf1-nB-qI4"/>
@@ -1404,22 +1414,32 @@
                                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hlh-Dn-cne">
                                                                             <rect key="frame" x="357.5" y="0.0" width="64.5" height="48.5"/>
                                                                         </button>
+                                                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="MaY-6p-1pR">
+                                                                            <rect key="frame" x="373.5" y="8" width="32.5" height="32.5"/>
+                                                                            <constraints>
+                                                                                <constraint firstAttribute="width" secondItem="MaY-6p-1pR" secondAttribute="height" id="b21-qN-dPs"/>
+                                                                            </constraints>
+                                                                        </activityIndicatorView>
                                                                     </subviews>
                                                                     <constraints>
                                                                         <constraint firstItem="dni-RJ-Bip" firstAttribute="centerY" secondItem="CZC-zD-mkF" secondAttribute="centerY" id="6em-yX-3Js"/>
+                                                                        <constraint firstAttribute="bottom" secondItem="MaY-6p-1pR" secondAttribute="bottom" constant="8" id="En2-ik-1kv"/>
                                                                         <constraint firstItem="hlh-Dn-cne" firstAttribute="leading" secondItem="LYk-aZ-EwR" secondAttribute="leading" constant="-16" id="GZh-uL-Ay2"/>
                                                                         <constraint firstItem="dni-RJ-Bip" firstAttribute="leading" secondItem="7Ps-Jn-cEc" secondAttribute="trailing" id="P0R-kM-WiN"/>
+                                                                        <constraint firstAttribute="trailing" secondItem="MaY-6p-1pR" secondAttribute="trailing" constant="16" id="XFA-f9-pJq"/>
                                                                         <constraint firstItem="LYk-aZ-EwR" firstAttribute="top" secondItem="CZC-zD-mkF" secondAttribute="top" constant="8" id="YL6-ed-d6a"/>
                                                                         <constraint firstAttribute="bottom" secondItem="hlh-Dn-cne" secondAttribute="bottom" id="YnR-pj-vNF"/>
                                                                         <constraint firstAttribute="trailing" secondItem="LYk-aZ-EwR" secondAttribute="trailing" constant="16" id="Z5a-pZ-wdW"/>
                                                                         <constraint firstItem="hlh-Dn-cne" firstAttribute="top" secondItem="CZC-zD-mkF" secondAttribute="top" id="dVp-Ge-9gK"/>
                                                                         <constraint firstAttribute="bottom" secondItem="LYk-aZ-EwR" secondAttribute="bottom" constant="8" id="eda-i2-8d8"/>
+                                                                        <constraint firstItem="MaY-6p-1pR" firstAttribute="top" secondItem="CZC-zD-mkF" secondAttribute="top" constant="8" id="gCG-ra-a1g"/>
                                                                         <constraint firstAttribute="trailing" secondItem="hlh-Dn-cne" secondAttribute="trailing" id="iUh-lb-geV"/>
                                                                         <constraint firstItem="7Ps-Jn-cEc" firstAttribute="leading" secondItem="CZC-zD-mkF" secondAttribute="leading" id="lt4-6s-GIf"/>
                                                                         <constraint firstItem="7Ps-Jn-cEc" firstAttribute="centerY" secondItem="CZC-zD-mkF" secondAttribute="centerY" id="x5F-f9-LzL"/>
                                                                     </constraints>
                                                                 </tableViewCellContentView>
                                                                 <connections>
+                                                                    <outlet property="activityMonitor" destination="MaY-6p-1pR" id="Iln-ar-ntN"/>
                                                                     <outlet property="bedLabel" destination="7Ps-Jn-cEc" id="Ssj-wO-yHk"/>
                                                                     <outlet property="deleteButton" destination="hlh-Dn-cne" id="8Fo-qy-rhf"/>
                                                                     <outlet property="deleteImage" destination="LYk-aZ-EwR" id="MUw-jm-KWF"/>
@@ -1653,6 +1673,7 @@
                         <outlet property="scheduleSingleIrrigationDatePicker" destination="lOv-xc-tRz" id="tsS-7Z-Ki7"/>
                         <outlet property="scheduleSingleIrrigationLabel" destination="plR-KR-t5S" id="hQ1-3g-rs3"/>
                         <outlet property="scheduleSingleIrrigationView" destination="PTM-EP-M7o" id="uyi-s9-QNz"/>
+                        <outlet property="scrollView" destination="JxE-7n-AFS" id="fAE-Sl-US3"/>
                         <outlet property="sensorsSelectionTableView" destination="nAn-I9-ay3" id="a24-Li-ZVh"/>
                         <outlet property="sensorsSelectionView" destination="OgZ-tl-KoA" id="iog-5P-JVv"/>
                         <outlet property="titleLabel" destination="fna-ct-qoW" id="QBr-wV-v0x"/>

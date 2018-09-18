@@ -11,6 +11,7 @@ import Charts
 
 class BedViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource {
 
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var chartsView: UIView!
     @IBOutlet weak var chartView: UIView!
@@ -104,6 +105,7 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
     
     func configure() {
         if let bedNo = self.bedNo {
+            scrollView.contentOffset = CGPoint(x: 0, y: 0)
             numberOfSensors = 0
             titleLabel.text = "Bed \(bedNo)"
             manualIrrigationControlTitle.text = "Bed \(bedNo)"
