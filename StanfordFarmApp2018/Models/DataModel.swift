@@ -8,6 +8,7 @@
 
 import Foundation
 import FirebaseDatabase
+import Charts
 
 let dataModel = DataModel()
 
@@ -37,7 +38,7 @@ class DataModel {
     
     var bed_iQueueDict:[String:[iQueueItem]]! = ["G1":[],"G2":[],"G3":[],"G4":[],"G5":[],"G6":[],"G7":[],"G8":[],"G9":[],"G10":[],"G11":[],"G12":[],"G13":[],"G14":[],"G15":[]]
     var bed_iScheduleData:[String:[String:(String, String)]] = [:]
-    var bed_sensorDataDict:[String:[String:[[Int]]]] = [:]
+    var bed_sensorDataDictCharts:[String:[String:[ChartDataEntry]]] = [:]
     
     init() {
         ref = Database.database().reference()
@@ -106,25 +107,24 @@ class DataModel {
     }
     
     func firebaseGet_SensorData(forBed: Int) {
-        if bed_sensorDataDict["G\(forBed)"] == nil {
+        if bed_sensorDataDictCharts["G\(forBed)"] == nil {
             var i = 1
             
             while dashboard_liveSensorDataKeys.contains("\(((forBed<10) ? "0" : ""))\(forBed):\(i)") {
-                self.bed_sensorDataDict["G\(forBed)"] = [:]
-                self.bed_sensorDataDict["G\(forBed)"]!["sensor\(i)"] = []
+                self.bed_sensorDataDictCharts["G\(forBed)"] = [:]
+                self.bed_sensorDataDictCharts["G\(forBed)"]!["sensor\(i)"] = []
                 i+=1
             }
             
-            for sensor in self.bed_sensorDataDict["G\(forBed)"]!.keys {
-                ref.child("Database/G\(forBed)/\(sensor)").queryLimited(toLast: 1000).queryOrdered(byChild: "timestamp").observeSingleEvent(of: .value) { (snapshot) in
+            for sensor in self.bed_sensorDataDictCharts["G\(forBed)"]!.keys {
+                ref.child("Database/G\(forBed)/\(sensor)").observeSingleEvent(of: .value) { (snapshot) in
                     if snapshot.exists() {
                         let allEvents = snapshot.value! as! [String:[String:Int]]
                         for (_, value) in allEvents {
                             let timestamp = value["timestamp"]!
-                            let date = Date(timeIntervalSince1970: (Double(timestamp)/1000))
                             let value = value["value"]!
-                            let dataTuple = [date.formatDate3(), value]
-                            self.bed_sensorDataDict["G\(forBed)"]![sensor]!.append(dataTuple)
+                            let chartDataValue = ChartDataEntry(x: Double(timestamp), y: Double(value))
+                            self.bed_sensorDataDictCharts["G\(forBed)"]![sensor]!.append(chartDataValue)
                         }
                     }
                     self.bed_sensorDataDownloadedCallback?()

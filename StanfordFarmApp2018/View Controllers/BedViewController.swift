@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Charts
 
 class BedViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource {
 
@@ -30,11 +31,10 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
     @IBOutlet weak var deleteView: UIView!
     @IBOutlet weak var confirmEndTimeView: UIView!
     
-    private var chartData: Array<Any> = []
-    private var aaChartModel: AAChartModel?
-    private var aaChartView: AAChartView?
     private var numberOfSensors = 0
     var scheduleModal_dayInt = -1
+    
+    private var scatterChartView: ScatterChartView?
     
     var scheduledIrrigationStartValue:Date? = Date()
     var hideEndConfirm: Bool = true {
@@ -72,8 +72,10 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
         deleteView.layer.cornerRadius = 4.0
         confirmEndTimeView.layer.cornerRadius = 4.0
         
+        configureChart()
+        
         dataModel.bed_sensorDataDownloadedCallback = {
-            self.processSensorData(chartIsEmpty: self.chartData.isEmpty)
+            self.processDataCharts()
         }
         
         dataModel.bed_iFlag_Callback = {
@@ -102,7 +104,6 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
     
     func configure() {
         if let bedNo = self.bedNo {
-            self.aaChartView?.removeFromSuperview()
             numberOfSensors = 0
             titleLabel.text = "Bed \(bedNo)"
             manualIrrigationControlTitle.text = "Bed \(bedNo)"
@@ -123,29 +124,50 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
         }
     }
     
-    // MARK: - Firebase Parsing
+    // MARK: - Chart Settings
     
-    func processSensorData(chartIsEmpty: Bool) {
+    func configureChart() {
+        scatterChartView = ScatterChartView()
+        
+        let description = Description()
+        description.text = ""
+        
+        scatterChartView?.clipsToBounds = false
+        scatterChartView?.chartDescription = description
+        scatterChartView?.frame = self.chartView.frame
+        scatterChartView?.xAxis.valueFormatter = self
+        scatterChartView?.xAxis.labelPosition = .bottom
+        scatterChartView?.xAxis.drawGridLinesEnabled = false
+        scatterChartView?.xAxis.labelFont = UIFont(name: "AvenirNext-Regular", size: 14)!
+        scatterChartView?.leftAxis.labelFont = UIFont(name: "AvenirNext-Regular", size: 14)!
+        scatterChartView?.leftAxis.gridColor = UIColor.lightGray
+        scatterChartView?.rightAxis.enabled = false
+        scatterChartView?.legend.enabled = false
+        scatterChartView?.noDataText = ""
+        self.chartsView.addSubview(scatterChartView!)
+    }
+    
+    func processDataCharts() {
         if let bedNo = self.bedNo {
-            if let sensorData = dataModel.bed_sensorDataDict["G\(bedNo)"] {
-                var series: [[String:Any]] = []
+            if let sensorData = dataModel.bed_sensorDataDictCharts["G\(bedNo)"] {
+                let data = ScatterChartData()
+                self.numberOfSensors = sensorData.keys.count
                 
                 for sensor in sensorData.keys {
-                    let element = AASeriesElement()
-                        .name(sensor)
-                        .data(sensorData[sensor]!)
-                        .toDic()!
-                    series.append(element)
+                    let dataSet = ScatterChartDataSet(values: sensorData[sensor]!, label: sensor.capitalized)
+                    dataSet.scatterShapeSize = 3.0
+                    dataSet.colors = [NSUIColor.orange]
+                    data.addDataSet(dataSet)
                 }
                 
-                self.numberOfSensors = series.count
+                scatterChartView?.data = data
                 DispatchQueue.main.async {
                     self.sensorsSelectionTableView.reloadData()
                 }
                 
-                chartIsEmpty ? self.configureChart(series: series) : self.updateChartData(series: series)
             }
         }
+        
     }
     
     // MARK: - Actions
@@ -155,41 +177,6 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
             if let iSwitch = dataModel.dashboard_iFlagData["G\(bedNo)"] {
                 dataModel.post_iFlag(bed: bedNo, iFlag: !iSwitch)
             }
-        }
-    }
-    
-    // MARK: - Chart Settings
-    
-    func configureChart(series: [[String:Any]]) {
-        aaChartView = AAChartView()
-        aaChartView?.frame = self.chartView.frame
-        self.chartsView.addSubview(aaChartView!)
-        aaChartView?.scrollEnabled = false
-        aaChartView?.isClearBackgroundColor = true
-        
-        aaChartModel = AAChartModel()
-            .chartType(AAChartType.Scatter)
-            .colorsTheme(["#fe117c","#ffc069","#06caf4","#7dffc0"])
-            .title("")
-            .subtitle("")
-            .yAxisTitle("Counts")
-            .dataLabelEnabled(false)
-            .tooltipValueSuffix(" Counts")
-            .backgroundColor("#ffffff")
-            .markerRadius(2)
-            .legendEnabled(false)
-            .animationType(AAChartAnimationType.Bounce)
-            .animationDuration(500)
-            .series(series)
-        
-        DispatchQueue.main.async {
-            self.aaChartView?.aa_drawChartWithChartModel(self.aaChartModel!)
-        }
-    }
-    
-    func updateChartData(series: [[String:Any]]) {
-        DispatchQueue.main.async {
-            self.aaChartView?.aa_onlyRefreshTheChartDataWithChartModelSeries(series)
         }
     }
     
@@ -417,5 +404,12 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
             destinationVC.dayInt = scheduleModal_dayInt
             destinationVC.bedNo = self.bedNo
         }
+    }
+}
+
+extension BedViewController: IAxisValueFormatter {
+    func stringForValue(_ value: Double, axis: AxisBase?) -> String {
+        let date = Date(timeIntervalSince1970: value)
+        return date.formatDate2()
     }
 }
