@@ -168,7 +168,7 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
         aaChartView?.isClearBackgroundColor = true
         
         aaChartModel = AAChartModel()
-            .chartType(AAChartType.Line)
+            .chartType(AAChartType.Scatter)
             .colorsTheme(["#fe117c","#ffc069","#06caf4","#7dffc0"])
             .title("")
             .subtitle("")
@@ -176,6 +176,7 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
             .dataLabelEnabled(false)
             .tooltipValueSuffix(" Counts")
             .backgroundColor("#ffffff")
+            .markerRadius(2)
             .legendEnabled(false)
             .animationType(AAChartAnimationType.Bounce)
             .animationDuration(500)

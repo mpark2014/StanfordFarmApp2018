@@ -39,13 +39,6 @@ class DataModel {
     var bed_iScheduleData:[String:[String:(String, String)]] = [:]
     var bed_sensorDataDict:[String:[String:[[Int]]]] = [:]
     
-//    var G1:[String:[[Int]]] = ["sensor1":[]]
-//    var G2:[String:[[Int]]] = ["sensor1":[]]
-//    var G3:[String:[[Int]]] = ["sensor1":[]]
-//    var G4:[String:[[Int]]] = ["sensor1":[]]
-//    var G5:[String:[[Int]]] = ["sensor1":[]]
-//    var G6:[String:[[Int]]] = ["sensor1":[]]
-    
     init() {
         ref = Database.database().reference()
         self.firebaseGet_Dashboard()
@@ -115,28 +108,27 @@ class DataModel {
     func firebaseGet_SensorData(forBed: Int) {
         if bed_sensorDataDict["G\(forBed)"] == nil {
             var i = 1
-            var bedX_sensorData:[String:[[Int]]] = [:]
             
             while dashboard_liveSensorDataKeys.contains("\(((forBed<10) ? "0" : ""))\(forBed):\(i)") {
-                bedX_sensorData["sensor\(i)"] = []
+                self.bed_sensorDataDict["G\(forBed)"] = [:]
+                self.bed_sensorDataDict["G\(forBed)"]!["sensor\(i)"] = []
                 i+=1
             }
             
-            for sensor in bedX_sensorData.keys {
-                ref.child("Settings/Test/Database/G\(forBed)/\(sensor)").queryLimited(toLast: 10).observe(DataEventType.childAdded, with: { (snapshot) in
-                    let item = snapshot.value! as! [String:Int]
-                    
-                    let timestamp = item["timestamp"]!
-                    let date = Date(timeIntervalSince1970: (Double(timestamp)/1000))
-                    let value = item["value"]!
-//                    print(date.formatDate3())
-                    let dataTuple = [date.formatDate3(), value]
-                    bedX_sensorData[sensor]!.append(dataTuple)
-                    
-                    self.bed_sensorDataDict["G\(forBed)"] = bedX_sensorData
-//                    print(self.bed_sensorDataDict)
+            for sensor in self.bed_sensorDataDict["G\(forBed)"]!.keys {
+                ref.child("Database/G\(forBed)/\(sensor)").queryLimited(toLast: 1000).queryOrdered(byChild: "timestamp").observeSingleEvent(of: .value) { (snapshot) in
+                    if snapshot.exists() {
+                        let allEvents = snapshot.value! as! [String:[String:Int]]
+                        for (_, value) in allEvents {
+                            let timestamp = value["timestamp"]!
+                            let date = Date(timeIntervalSince1970: (Double(timestamp)/1000))
+                            let value = value["value"]!
+                            let dataTuple = [date.formatDate3(), value]
+                            self.bed_sensorDataDict["G\(forBed)"]![sensor]!.append(dataTuple)
+                        }
+                    }
                     self.bed_sensorDataDownloadedCallback?()
-                })
+                }
             }
         } else {
             self.bed_sensorDataDownloadedCallback?()
