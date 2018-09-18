@@ -180,6 +180,12 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
         }
     }
     
+    @IBAction func refreshChart(_ sender: Any) {
+        if let bedNo = self.bedNo {
+            dataModel.retrieveSensorData(forBed: bedNo)
+        }
+    }
+    
     // MARK: - Collection View Methods
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

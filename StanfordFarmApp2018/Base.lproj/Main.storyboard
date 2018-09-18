@@ -1187,23 +1187,43 @@
                                                 <rect key="frame" x="16" y="16" width="726" height="450"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bed 1 - Vitals" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fna-ct-qoW">
-                                                        <rect key="frame" x="16" y="16" width="110" height="22"/>
+                                                        <rect key="frame" x="16" y="16" width="110" height="14"/>
                                                         <fontDescription key="fontDescription" name="Charter-Bold" family="Charter" pointSize="18"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kAW-iL-hen">
-                                                        <rect key="frame" x="16" y="54" width="710" height="380"/>
+                                                        <rect key="frame" x="16" y="46" width="710" height="388"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </view>
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="refresh" translatesAutoresizingMaskIntoConstraints="NO" id="7A6-Rs-HJ3">
+                                                        <rect key="frame" x="688" y="8" width="30" height="30"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" secondItem="7A6-Rs-HJ3" secondAttribute="height" id="X9o-5r-eJX"/>
+                                                            <constraint firstAttribute="height" constant="30" id="i3P-o9-Qxi"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OFV-HK-1uk">
+                                                        <rect key="frame" x="680" y="0.0" width="46" height="46"/>
+                                                        <connections>
+                                                            <action selector="refreshChart:" destination="R8Q-rC-Tip" eventType="touchUpInside" id="KCZ-pL-nt7"/>
+                                                        </connections>
+                                                    </button>
                                                 </subviews>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
+                                                    <constraint firstItem="OFV-HK-1uk" firstAttribute="bottom" secondItem="7A6-Rs-HJ3" secondAttribute="bottom" constant="8" id="0mK-Sl-QNa"/>
+                                                    <constraint firstItem="OFV-HK-1uk" firstAttribute="top" secondItem="ghC-Jt-MBh" secondAttribute="top" id="1rc-Yp-6AH"/>
                                                     <constraint firstItem="fna-ct-qoW" firstAttribute="top" secondItem="ghC-Jt-MBh" secondAttribute="top" constant="16" id="4st-0o-HGD"/>
+                                                    <constraint firstAttribute="trailing" secondItem="OFV-HK-1uk" secondAttribute="trailing" id="98j-Mc-CW8"/>
                                                     <constraint firstAttribute="trailing" secondItem="kAW-iL-hen" secondAttribute="trailing" id="AfI-Q0-Ye6"/>
+                                                    <constraint firstAttribute="trailing" secondItem="7A6-Rs-HJ3" secondAttribute="trailing" constant="8" id="Fml-Bz-LN9"/>
+                                                    <constraint firstItem="7A6-Rs-HJ3" firstAttribute="centerY" secondItem="fna-ct-qoW" secondAttribute="centerY" id="Xm8-PE-Jes"/>
+                                                    <constraint firstItem="OFV-HK-1uk" firstAttribute="leading" secondItem="7A6-Rs-HJ3" secondAttribute="leading" constant="-8" id="XyV-Ua-jaT"/>
                                                     <constraint firstAttribute="height" constant="450" id="a3T-RG-tFN"/>
                                                     <constraint firstItem="kAW-iL-hen" firstAttribute="leading" secondItem="ghC-Jt-MBh" secondAttribute="leading" constant="16" id="c13-b9-Q8m"/>
                                                     <constraint firstItem="kAW-iL-hen" firstAttribute="top" secondItem="fna-ct-qoW" secondAttribute="bottom" constant="16" id="kkx-Ny-YTE"/>
+                                                    <constraint firstItem="7A6-Rs-HJ3" firstAttribute="top" secondItem="ghC-Jt-MBh" secondAttribute="top" constant="8" id="knw-fP-szm"/>
                                                     <constraint firstItem="fna-ct-qoW" firstAttribute="leading" secondItem="ghC-Jt-MBh" secondAttribute="leading" constant="16" id="q0f-gf-PJA"/>
                                                     <constraint firstAttribute="bottom" secondItem="kAW-iL-hen" secondAttribute="bottom" constant="16" id="yVH-TS-gRR"/>
                                                 </constraints>
@@ -1253,7 +1273,7 @@
                                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bsW-Pl-U1Y">
                                                 <rect key="frame" x="16" y="482" width="892" height="198"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Schedule Irrigation" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZS8-O1-eNP">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Irrigation Schedule" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZS8-O1-eNP">
                                                         <rect key="frame" x="365.5" y="16" width="161" height="22"/>
                                                         <fontDescription key="fontDescription" name="Charter-Bold" family="Charter" pointSize="18"/>
                                                         <nil key="highlightedColor"/>
@@ -1834,6 +1854,7 @@
     <resources>
         <image name="delete" width="500" height="500"/>
         <image name="leftArrow" width="550" height="550"/>
+        <image name="refresh" width="600" height="600"/>
         <image name="rightArrow" width="550" height="550"/>
     </resources>
 </document>

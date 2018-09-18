@@ -108,30 +108,34 @@ class DataModel {
     
     func firebaseGet_SensorData(forBed: Int) {
         if bed_sensorDataDictCharts["G\(forBed)"] == nil {
-            var i = 1
-            
-            while dashboard_liveSensorDataKeys.contains("\(((forBed<10) ? "0" : ""))\(forBed):\(i)") {
-                self.bed_sensorDataDictCharts["G\(forBed)"] = [:]
-                self.bed_sensorDataDictCharts["G\(forBed)"]!["sensor\(i)"] = []
-                i+=1
-            }
-            
-            for sensor in self.bed_sensorDataDictCharts["G\(forBed)"]!.keys {
-                ref.child("Database/G\(forBed)/\(sensor)").observeSingleEvent(of: .value) { (snapshot) in
-                    if snapshot.exists() {
-                        let allEvents = snapshot.value! as! [String:[String:Int]]
-                        for (_, value) in allEvents {
-                            let timestamp = value["timestamp"]!
-                            let value = value["value"]!
-                            let chartDataValue = ChartDataEntry(x: Double(timestamp), y: Double(value))
-                            self.bed_sensorDataDictCharts["G\(forBed)"]![sensor]!.append(chartDataValue)
-                        }
-                    }
-                    self.bed_sensorDataDownloadedCallback?()
-                }
-            }
+            retrieveSensorData(forBed: forBed)
         } else {
             self.bed_sensorDataDownloadedCallback?()
+        }
+    }
+    
+    func retrieveSensorData(forBed: Int) {
+        var i = 1
+        
+        while dashboard_liveSensorDataKeys.contains("\(((forBed<10) ? "0" : ""))\(forBed):\(i)") {
+            self.bed_sensorDataDictCharts["G\(forBed)"] = [:]
+            self.bed_sensorDataDictCharts["G\(forBed)"]!["sensor\(i)"] = []
+            i+=1
+        }
+        
+        for sensor in self.bed_sensorDataDictCharts["G\(forBed)"]!.keys {
+            ref.child("Database/G\(forBed)/\(sensor)").observeSingleEvent(of: .value) { (snapshot) in
+                if snapshot.exists() {
+                    let allEvents = snapshot.value! as! [String:[String:Int]]
+                    for (_, value) in allEvents {
+                        let timestamp = value["timestamp"]!
+                        let value = value["value"]!
+                        let chartDataValue = ChartDataEntry(x: Double(timestamp), y: Double(value))
+                        self.bed_sensorDataDictCharts["G\(forBed)"]![sensor]!.append(chartDataValue)
+                    }
+                }
+                self.bed_sensorDataDownloadedCallback?()
+            }
         }
     }
     

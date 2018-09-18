@@ -9,8 +9,8 @@
 import Foundation
 import UIKit
 
-let greenColor = UIColor(red: 107/255, green: 170/255, blue: 53/255, alpha: 1.0)
-let redColor = UIColor(red: 140/255, green: 21/255, blue: 21/255, alpha: 1.0)
+let greenColor = UIColor(red: 107/256, green: 170/256, blue: 53/256, alpha: 1.0)
+let redColor = UIColor(red: 140/256, green: 21/256, blue: 21/256, alpha: 1.0)
 
 extension UIImageView {
     func setImageColor(color: UIColor) {
