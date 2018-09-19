@@ -106,6 +106,7 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
     func configure() {
         if let bedNo = self.bedNo {
             scrollView.contentOffset = CGPoint(x: 0, y: 0)
+            scheduleSingleIrrigationDatePicker.date = Date()
             numberOfSensors = 0
             titleLabel.text = "Bed \(bedNo)"
             manualIrrigationControlTitle.text = "Bed \(bedNo)"
@@ -186,6 +187,10 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
         if let bedNo = self.bedNo {
             dataModel.retrieveSensorData(forBed: bedNo)
         }
+    }
+    
+    @IBAction func dataSettings(_ sender: Any) {
+        performSegue(withIdentifier: "dataSettingsModalSegue", sender: self)
     }
     
     // MARK: - Collection View Methods
@@ -410,6 +415,9 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
         if segue.identifier == "editScheduleSegue" {
             let destinationVC = segue.destination as! ScheduleIrrigationModalViewController
             destinationVC.dayInt = scheduleModal_dayInt
+            destinationVC.bedNo = self.bedNo
+        } else if segue.identifier == "dataSettingsModalSegue" {
+            let destinationVC = segue.destination as! DataSettingsModalViewController
             destinationVC.bedNo = self.bedNo
         }
     }

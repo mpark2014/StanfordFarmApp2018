@@ -61,6 +61,13 @@ extension Date {
         
         return Int(fullString)!
     }
+    
+    func formatDate4() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US")
+        dateFormatter.dateFormat = "MM-dd-YY_HH-mm-ss"
+        return dateFormatter.string(from: self)
+    }
 }
 
 

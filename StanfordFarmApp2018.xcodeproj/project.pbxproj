@@ -25,6 +25,7 @@
 		464C58ED211290080079487A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 464C58EB211290080079487A /* LaunchScreen.storyboard */; };
 		464C58F8211290080079487A /* StanfordFarmApp2018Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464C58F7211290080079487A /* StanfordFarmApp2018Tests.swift */; };
 		464C5903211290080079487A /* StanfordFarmApp2018UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464C5902211290080079487A /* StanfordFarmApp2018UITests.swift */; };
+		466F1E4021517A1500BB6703 /* DataSettingsModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 466F1E3F21517A1500BB6703 /* DataSettingsModalViewController.swift */; };
 		468FB67E211946CB004B9CBA /* AAChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468FB679211946CB004B9CBA /* AAChartView.swift */; };
 		468FB67F211946CB004B9CBA /* AAChartModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468FB67A211946CB004B9CBA /* AAChartModel.swift */; };
 		468FB680211946CB004B9CBA /* AASerializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468FB67B211946CB004B9CBA /* AASerializable.swift */; };
@@ -85,6 +86,7 @@
 		464C58FE211290080079487A /* StanfordFarmApp2018UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StanfordFarmApp2018UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		464C5902211290080079487A /* StanfordFarmApp2018UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StanfordFarmApp2018UITests.swift; sourceTree = "<group>"; };
 		464C5904211290080079487A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		466F1E3F21517A1500BB6703 /* DataSettingsModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSettingsModalViewController.swift; sourceTree = "<group>"; };
 		468FB679211946CB004B9CBA /* AAChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AAChartView.swift; sourceTree = "<group>"; };
 		468FB67A211946CB004B9CBA /* AAChartModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AAChartModel.swift; sourceTree = "<group>"; };
 		468FB67B211946CB004B9CBA /* AASerializable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AASerializable.swift; sourceTree = "<group>"; };
@@ -164,6 +166,7 @@
 				46BD13F2211B74E300E3A06C /* BedViewController.swift */,
 				460454E42149D9B8009B4E0A /* ScheduleIrrigationModalViewController.swift */,
 				460454E62149E1E2009B4E0A /* SamplingSettingsModalViewController.swift */,
+				466F1E3F21517A1500BB6703 /* DataSettingsModalViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -505,6 +508,7 @@
 				464C58E3211290060079487A /* MasterViewController.swift in Sources */,
 				464C58E1211290060079487A /* AppDelegate.swift in Sources */,
 				46BD13FA211E34D100E3A06C /* DashboardStatusTableViewCell.swift in Sources */,
+				466F1E4021517A1500BB6703 /* DataSettingsModalViewController.swift in Sources */,
 				468FB680211946CB004B9CBA /* AASerializable.swift in Sources */,
 				46C35A2121503A870010D07E /* BedSensorsSelectionTableViewCell.swift in Sources */,
 				46BD13F3211B74E300E3A06C /* BedViewController.swift in Sources */,

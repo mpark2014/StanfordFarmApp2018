@@ -26,6 +26,8 @@ class DataModel {
     var bed_iSchedule_Callback: (() -> ())?
     var bed_iQueueBed_Callback: (() -> ())?
     var bed_sensorDataDownloadedCallback: (() -> ())?
+    var bed_downloadCsvCallback: ((String, URL) -> ())?
+    var bed_sensorDataSettingsModalCallback: (() -> ())?
     
     // Data Stores
     var dashboard_iFlagData:[String:Bool]! = [:]
@@ -39,6 +41,7 @@ class DataModel {
     var bed_iQueueDict:[String:[iQueueItem]]! = ["G1":[],"G2":[],"G3":[],"G4":[],"G5":[],"G6":[],"G7":[],"G8":[],"G9":[],"G10":[],"G11":[],"G12":[],"G13":[],"G14":[],"G15":[]]
     var bed_iScheduleData:[String:[String:(String, String)]] = [:]
     var bed_sensorDataDictCharts:[String:[String:[ChartDataEntry]]] = [:]
+//    var bed_downloadCsvDict:[String:[String:[(Int,Int)]]] = [:]
     
     init() {
         ref = Database.database().reference()
@@ -112,6 +115,33 @@ class DataModel {
         } else {
             self.bed_sensorDataDownloadedCallback?()
         }
+    }
+    
+    func downloadCSV(forBed: Int, path: URL) {
+        var i = 1
+        var csvText = ""
+        
+        while dashboard_liveSensorDataKeys.contains("\(((forBed<10) ? "0" : ""))\(forBed):\(i)") {
+            self.bed_sensorDataDictCharts["G\(forBed)"] = [:]
+            self.bed_sensorDataDictCharts["G\(forBed)"]!["sensor\(i)"] = []
+            i+=1
+        }
+        
+        for sensor in self.bed_sensorDataDictCharts["G\(forBed)"]!.keys {
+            ref.child("Database/G\(forBed)/\(sensor)").observeSingleEvent(of: .value) { (snapshot) in
+                if snapshot.exists() {
+                    csvText += "\nTimestamp,\(sensor)\n"
+                    let allEvents = snapshot.value! as! [String:[String:Int]]
+                    for (_, value) in allEvents {
+                        let timestamp = value["timestamp"]!
+                        let value = value["value"]!
+                        
+                        csvText += "\(timestamp),\(value)\n"
+                    }
+                }
+            }
+        }
+        self.bed_downloadCsvCallback?(csvText, path)
     }
     
     func retrieveSensorData(forBed: Int) {
@@ -211,6 +241,13 @@ class DataModel {
     func delete_iScheduleItem(bed: Int, day: String) {
         self.ref.child("iSchedule/G\(bed)/\(day)").removeValue()
         dataModel.bed_iScheduleData["G\(bed)"]!.removeValue(forKey: day)
+    }
+    
+    func delete_bedSensorData(bed: Int) {
+        self.ref.child("Database/G\(bed)").removeValue()
+        bed_sensorDataDictCharts["G\(bed)"] = [:]
+        self.bed_sensorDataDownloadedCallback?()
+        self.bed_sensorDataSettingsModalCallback?()
     }
     
     func delete_codeDirectedItem(path: String) {

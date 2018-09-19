@@ -100,11 +100,16 @@ class MasterViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 self.title = "BED \(indexPath.row)"
                 self.bedViewController.bedNo = indexPath.row
                 self.bedViewController.hideEndConfirm = true
+                
             } else if indexPath.row == 0 && dashContainer.isHidden {
                 self.title = "DASHBOARD"
                 switchContainers()
             }
         }
+    }
+    
+    @IBAction func editCsv(sender: UIBarButtonItem) {
+        print("do stuff")
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
