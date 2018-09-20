@@ -36,12 +36,10 @@ class DataModel {
     var dashboard_chartData:[Int]! = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     var dashboard_settings:[String:Int]! = [:]
     var dashboard_iQueueArray:[iQueueItem] = []
-    var dashboard_iStatusDict:[String:[iQueueItem]]! = ["G1":[],"G2":[],"G3":[],"G4":[],"G5":[],"G6":[],"G7":[],"G8":[],"G9":[],"G10":[],"G11":[],"G12":[],"G13":[],"G14":[],"G15":[]]
     
     var bed_iQueueDict:[String:[iQueueItem]]! = ["G1":[],"G2":[],"G3":[],"G4":[],"G5":[],"G6":[],"G7":[],"G8":[],"G9":[],"G10":[],"G11":[],"G12":[],"G13":[],"G14":[],"G15":[]]
     var bed_iScheduleData:[String:[String:(String, String)]] = [:]
     var bed_sensorDataDictCharts:[String:[String:[ChartDataEntry]]] = [:]
-//    var bed_downloadCsvDict:[String:[String:[(Int,Int)]]] = [:]
     
     init() {
         ref = Database.database().reference()
@@ -139,9 +137,9 @@ class DataModel {
                         csvText += "\(timestamp),\(value)\n"
                     }
                 }
+                self.bed_downloadCsvCallback?(csvText, path)
             }
         }
-        self.bed_downloadCsvCallback?(csvText, path)
     }
     
     func retrieveSensorData(forBed: Int) {
@@ -335,7 +333,6 @@ class DataModel {
     // REVIEW/FIX THIS
     func parse_iQueueBed(snapshot: DataSnapshot) {
         let bedString = snapshot.key
-        var iStatusArray: [iQueueItem] = []
         var bed_iQueueArray: [iQueueItem] = []
         let value = snapshot.value as! [String:[String:Any]]
         
@@ -353,13 +350,9 @@ class DataModel {
             } else {
                 bed_iQueueArray[bed_iQueueArray.index(of: item)!] = item
             }
-            if !(iStatusArray.contains(item)) && now > start && now < end {
-                insertSortedIQueueItem(array: &iStatusArray, element: item)
-            }
         }
         
         self.bed_iQueueDict[bedString] = bed_iQueueArray
-        self.dashboard_iStatusDict[bedString] = iStatusArray
         self.dashboard_iQueueBed_Callback?()
         self.bed_iQueueBed_Callback?()
     }
@@ -381,13 +374,6 @@ class DataModel {
                 if iBedArray.contains(item) {
                     bed_iQueueDict[bedString]!.remove(at: (bed_iQueueDict[bedString]?.index(of: item))!)
                     self.bed_iQueueBed_Callback?()
-                }
-                
-                if dashboard_iStatusDict[bedString] != nil {
-                    if dashboard_iStatusDict[bedString]!.contains(item) {
-                        dashboard_iStatusDict[bedString]!.remove(at: (dashboard_iStatusDict[bedString]?.index(of: item))!)
-                        self.dashboard_iQueueBed_Callback?()
-                    }
                 }
             }
         }

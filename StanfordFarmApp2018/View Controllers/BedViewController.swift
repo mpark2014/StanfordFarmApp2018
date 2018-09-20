@@ -141,8 +141,8 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
         scatterChartView?.xAxis.valueFormatter = self
         scatterChartView?.xAxis.labelPosition = .bottom
         scatterChartView?.xAxis.drawGridLinesEnabled = false
-        scatterChartView?.xAxis.labelFont = UIFont(name: "AvenirNext-Regular", size: 14)!
-        scatterChartView?.leftAxis.labelFont = UIFont(name: "AvenirNext-Regular", size: 14)!
+        scatterChartView?.xAxis.labelFont = UIFont(name: "AvenirNext-Regular", size: 12)!
+        scatterChartView?.leftAxis.labelFont = UIFont(name: "AvenirNext-Regular", size: 12)!
         scatterChartView?.leftAxis.gridColor = UIColor.lightGray
         scatterChartView?.rightAxis.enabled = false
         scatterChartView?.legend.enabled = false
@@ -159,7 +159,7 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
                 for sensor in sensorData.keys {
                     let dataSet = ScatterChartDataSet(values: sensorData[sensor]!, label: sensor.capitalized)
                     dataSet.scatterShapeSize = 3.0
-                    dataSet.colors = [NSUIColor.orange]
+                    dataSet.colors = [NSUIColor(cgColor: redColor.cgColor)]
                     data.addDataSet(dataSet)
                 }
                 
@@ -274,6 +274,7 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
             let cell = tableView.dequeueReusableCell(withIdentifier: "sensorsSelectionTableViewCell") as! BedSensorsSelectionTableViewCell
             cell.selectionStyle = .none
             cell.titleLabel.text = "SENSOR \(indexPath.row+1)"
+            cell.titleLabel.textColor = redColor
             return cell
         } else if tableView == self.irrigationQueueTableView {
             let cell = tableView.dequeueReusableCell(withIdentifier: "irrigationQueueCell") as! DashIrrigationQueueTableViewCell
@@ -425,7 +426,7 @@ class BedViewController: UIViewController, UICollectionViewDelegate, UICollectio
 
 extension BedViewController: IAxisValueFormatter {
     func stringForValue(_ value: Double, axis: AxisBase?) -> String {
-        let date = Date(timeIntervalSince1970: value)
-        return date.formatDate2()
+        let date = Date(timeIntervalSince1970: Double(value/1000))
+        return date.formatDate5()
     }
 }

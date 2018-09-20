@@ -50,7 +50,6 @@ class DataSettingsModalViewController: UIViewController {
         }
         
         dataModel.bed_downloadCsvCallback = { csvText, path in
-            
             do {
                 try csvText.write(to: path, atomically: true, encoding: String.Encoding.utf8)
                 

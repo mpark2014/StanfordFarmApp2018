@@ -56,6 +56,8 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         statusTableView.dataSource = self
         
         irrigationQueueTableView.rowHeight = (irrigationQueueTableView.frame.height+1)/6
+        scheduleIrrigationLeftArrowImage.setImageColor(color: UIColor.white)
+        scheduleIrrigationRightArrowImage.setImageColor(color: UIColor.white)
         
         sensorsView.layer.cornerRadius = 4
         samplingSettingsView.layer.cornerRadius = 4
@@ -119,12 +121,19 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
         
         aaChartModel = AAChartModel()
             .chartType(AAChartType.Column)
-            .colorsTheme(["#1e90ff","#ef476f","#ffd066","#04d69f","#25547c",])
+            .gradientColorEnable(false)
+            .dataLabelEnabled(false)
+            .legendEnabled(false)
             .title("")
             .subtitle("")
-            .dataLabelEnabled(false)
             .tooltipValueSuffix(" Counts")
             .backgroundColor("#ffffff")
+            .colorsTheme(["#a7d5d4"])
+            .symbolStyle(AAChartSymbolStyleType.BorderBlank)
+            .animationType(AAChartAnimationType.Bounce)
+            .animationDuration(500)
+            .borderRadius(4)
+            .categories(["BED 1", "BED 2", "BED 3", "BED 4", "BED 5", "BED 6", "BED 7", "BED 8", "BED 9", "BED 10", "BED 11", "BED 12", "BED 13", "BED 14", "BED 15"])
             .series([
                 AASeriesElement()
                     .name("Sensor")
@@ -132,7 +141,6 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
                     .toDic()!,
                 ])
         
-        self.configureChartStyle()
         aaChartView?.aa_drawChartWithChartModel(aaChartModel!)
     }
     
@@ -143,17 +151,6 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             .toDic()!
         ]
         aaChartView?.aa_onlyRefreshTheChartDataWithChartModelSeries(series)
-    }
-    
-    func configureChartStyle() {
-        aaChartModel = aaChartModel?
-            .categories(["BED 1", "BED 2", "BED 3", "BED 4", "BED 5", "BED 6", "BED 7", "BED 8", "BED 9", "BED 10", "BED 11", "BED 12", "BED 13", "BED 14", "BED 15"])
-            .legendEnabled(false)
-            .symbolStyle(AAChartSymbolStyleType.BorderBlank)
-            .colorsTheme(["#fe117c","#ffc069","#06caf4","#7dffc0"])
-            .animationType(AAChartAnimationType.Bounce)
-            .animationDuration(500)
-            .borderRadius(8)
     }
     
     func configureSamplingSettings() {
@@ -404,16 +401,8 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
             return cell
         case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: "dashStatusCell")! as! DashboardStatusTableViewCell
-            let array = dataModel.dashboard_iStatusDict["G\(indexPath.row+1)"]!
             cell.bedLabel.text = "G\(indexPath.row+1)"
             cell.selectionStyle = .none
-            
-            if array.isEmpty {
-                cell.configureNone()
-            } else {
-                let item = array[0]
-                cell.configureType(type: item.type, endTime: item.end.formatDate1())
-            }
             return cell
         default:
             return UITableViewCell()
@@ -423,11 +412,11 @@ class DashboardViewController: UIViewController, UICollectionViewDelegate, UICol
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch tableView.tag {
         case 0:
-            return (tableView.frame.height+1)/10
+            return (tableView.frame.height+1)/15
         case 1:
             return (tableView.frame.height+1)/6
         case 2:
-            return tableView.frame.height/6
+            return (tableView.frame.height+1)/15
         default:
             return 0
         }
