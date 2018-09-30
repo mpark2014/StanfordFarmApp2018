@@ -9,7 +9,8 @@
 import Foundation
 import UIKit
 
-let greenColor = UIColor(red: 107.0/255, green: 170.0/255, blue: 53.0/255, alpha: 1.0)
+//let greenColor = UIColor(red: 107.0/255, green: 170.0/255, blue: 53.0/255, alpha: 1.0)
+let greenColor = UIColor(red: 167.0/255, green: 213.0/255, blue: 212.0/255, alpha: 1.0)
 let redColor = UIColor(red: 140.0/255, green: 21.0/255, blue: 21.0/255, alpha: 1.0)
 let tealColor = UIColor(red: 167.0/255, green: 213.0/255, blue: 212.0/255, alpha: 1.0)
 
